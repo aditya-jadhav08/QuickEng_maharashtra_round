@@ -1,99 +1,147 @@
 import { useState } from 'react'
 import './App.css'
 
+const VITE_API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+
 function App() {
-  const [task, setTask] = useState('Write a Python function to check if a number is greater than 100, then print Boiling, if > 50 print Hot, else print Cold.')
+  const [task, setTask] = useState('')
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
+  const [errorMsg, setErrorMsg] = useState('')
 
-  const handleAnalyze = async () => {
-    if (!code.trim() || !task.trim()) return
+  const handleDiagnose = async () => {
+    if (!code.trim() || !task.trim()) {
+        setErrorMsg("Task and code are required.");
+        return;
+    }
     setLoading(true)
     setResult(null)
+    setErrorMsg('')
 
     try {
-      const response = await fetch('http://localhost:3000/api/analyze', {
+      const response = await fetch(`${VITE_API_URL}/diagnose`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ task: task, studentCode: code })
+        body: JSON.stringify({ task, code })
       })
       
       const data = await response.json()
       
       if (!response.ok) {
-        throw new Error(data.detail || 'Failed to analyze code')
+        throw new Error(data.detail || 'Failed to diagnose code')
       }
       
       setResult(data)
     } catch (error) {
-      console.error("Error analyzing code:", error)
-      setResult({ error: error.message })
+      setErrorMsg(error.message)
     } finally {
       setLoading(false)
     }
   }
 
+  const loadExample = (type) => {
+    if (type === 'print') {
+      setTask("Return the sum of two numbers")
+      setCode("def add(a, b):\\n    print(a + b)")
+    } else if (type === 'if') {
+      setTask("Return True if the number is exactly 10")
+      setCode("def is_ten(n):\\n    if n = 10:\\n        return True\\n    return False")
+    } else if (type === 'correct') {
+      setTask("Return the sum of two numbers")
+      setCode("def add(a, b):\\n    return a + b")
+    }
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const start = e.target.selectionStart;
+      const end = e.target.selectionEnd;
+      setCode(code.substring(0, start) + "    " + code.substring(end));
+      setTimeout(() => {
+        e.target.selectionStart = e.target.selectionEnd = start + 4;
+      }, 0);
+    }
+  }
+
   return (
     <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto', fontFamily: 'system-ui' }}>
-      <h1>🧠 Re:Learn Diagnosis Engine</h1>
-      <p>Enter the task and the student's code to classify the specific misconception.</p>
+      <h1>Re:Learn Diagnosis</h1>
       
+      <div style={{ marginBottom: '1rem', display: 'flex', gap: '10px' }}>
+        <button onClick={() => loadExample('print')}>Example: Print instead of return</button>
+        <button onClick={() => loadExample('if')}>Example: if n = 10</button>
+        <button onClick={() => loadExample('correct')}>Example: Correct code</button>
+      </div>
+
       <div style={{ marginBottom: '1rem' }}>
-        <strong>Task Given to Student:</strong>
-        <textarea 
+        <label style={{display: 'block', fontWeight: 'bold'}}>Task</label>
+        <input 
           value={task}
           onChange={(e) => setTask(e.target.value)}
-          rows={3} 
-          style={{ width: '100%', padding: '0.8rem', marginTop: '0.5rem', fontFamily: 'sans-serif', fontSize: '15px', borderRadius: '8px', border: '1px solid #ccc' }}
+          style={{ width: '100%', padding: '0.8rem', marginTop: '0.5rem' }}
         />
       </div>
 
       <div style={{ marginBottom: '1rem' }}>
-        <strong>Student's Code:</strong>
+        <label style={{display: 'block', fontWeight: 'bold'}}>Student code</label>
         <textarea 
           value={code}
           onChange={(e) => setCode(e.target.value)}
+          onKeyDown={handleKeyDown}
           rows={8} 
-          style={{ width: '100%', padding: '1rem', marginTop: '0.5rem', fontFamily: 'monospace', fontSize: '16px', borderRadius: '8px', border: '1px solid #ccc' }}
-          placeholder="def check_temperature(temp):..."
+          style={{ width: '100%', padding: '1rem', marginTop: '0.5rem', fontFamily: 'monospace' }}
         />
       </div>
       
       <button 
-        onClick={handleAnalyze} 
+        onClick={handleDiagnose} 
         disabled={loading}
-        style={{ padding: '0.8rem 2rem', fontSize: '16px', cursor: 'pointer', backgroundColor: '#646cff', color: 'white', border: 'none', borderRadius: '8px', width: '100%' }}
+        style={{ padding: '0.8rem 2rem', cursor: 'pointer' }}
       >
-        {loading ? 'Running Diagnosis Model...' : 'Diagnose Misconception'}
+        {loading ? 'Diagnosing...' : 'Diagnose'}
       </button>
 
-      {result && result.error && (
-        <div style={{ marginTop: '2rem', padding: '1.5rem', backgroundColor: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px', color: '#991b1b' }}>
-          <h3>⚠️ Error</h3>
-          <p>{result.error}</p>
+      {errorMsg && (
+        <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: '#fee2e2', color: '#991b1b' }}>
+          {errorMsg}
         </div>
       )}
 
-      {result && !result.error && (
-        <div style={{ marginTop: '2rem', padding: '1.5rem', backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', color: '#1e3a8a' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ margin: 0 }}>🏷️ Label: <strong>{result.label}</strong></h3>
-            <span style={{ backgroundColor: '#dbeafe', padding: '4px 12px', borderRadius: '20px', fontSize: '14px', fontWeight: 'bold' }}>
-              Confidence: {result.confidence * 100}%
-            </span>
-          </div>
-          
-          <h4 style={{ marginTop: '1.5rem', marginBottom: '0.5rem' }}>🔍 Evidence (from code):</h4>
-          <pre style={{ backgroundColor: '#1e293b', color: '#f8fafc', padding: '1rem', borderRadius: '6px', overflowX: 'auto' }}>
-            {result.evidence}
-          </pre>
-          
-          <h4 style={{ marginTop: '1.5rem', marginBottom: '0.5rem' }}>🧠 Reasoning:</h4>
-          <p style={{ marginTop: 0 }}>{result.reasoning}</p>
+      {result && (
+        <div style={{ marginTop: '2rem' }}>
+          {result.needs_clarification ? (
+            <div style={{ padding: '1.5rem', backgroundColor: '#fef3c7', border: '1px solid #fde68a' }}>
+              <h3>⚠️ We're not sure what went wrong. Can you tell us what you were trying to do?</h3>
+            </div>
+          ) : result.label === 'NONE' ? (
+            <div style={{ padding: '1.5rem', backgroundColor: '#dcfce7', border: '1px solid #bbf7d0' }}>
+              <h3>✅ Looks correct</h3>
+            </div>
+          ) : (
+            <div style={{ padding: '1.5rem', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
+              <h3>{result.label_name} <span style={{fontSize: '12px', background: '#eee', padding: '2px 6px', borderRadius: '4px'}}>{result.label}</span></h3>
+              
+              <div style={{ background: '#e2e8f0', height: '8px', borderRadius: '4px', margin: '1rem 0', width: '100%', overflow: 'hidden' }}>
+                <div style={{ background: '#3b82f6', height: '100%', width: `${result.confidence * 100}%` }}></div>
+              </div>
+              <small>Confidence: {Math.round(result.confidence * 100)}%</small>
 
-          <h4 style={{ marginTop: '1.5rem', marginBottom: '0.5rem' }}>🔄 Alternative Consideration:</h4>
-          <p style={{ marginTop: 0, fontStyle: 'italic', color: '#475569' }}>{result.alternative}</p>
+              <h4 style={{marginTop: '1rem'}}>Evidence:</h4>
+              <pre style={{ background: '#f1f5f9', padding: '1rem' }}>{result.evidence}</pre>
+              {!result.evidence_verified && <small style={{color: '#d97706'}}>⚠️ Evidence could not be matched exactly</small>}
+
+              <h4 style={{marginTop: '1rem'}}>Reasoning:</h4>
+              <p>{result.reasoning}</p>
+
+              {result.alternative !== 'NONE' && (
+                <p style={{ marginTop: '1rem', fontStyle: 'italic' }}>
+                  Could also be: {result.alternative}
+                </p>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>

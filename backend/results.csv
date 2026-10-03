@@ -1,0 +1,10 @@
+id,misconception_id,task,student_code,is_correct,true_label,notes,predicted_label,confidence,evidence,evidence_verified,needs_clarification,correct
+1,M06,Return the sum of two numbers,"def add(a, b):
+    print(a + b)",False,M06,look-alike,M06,1.0,print(a + b),True,False,True
+2,M01,Return True if exactly 10,"def is_ten(n):
+    if n = 10:
+        return True
+    return False",False,M01,,M01,1.0,n = 10,True,False,True
+3,NONE,Return the sum of two numbers,"def add(a, b):
+    return a + b",True,NONE,,NONE,1.0,"def add(a, b):
+    return a + b",True,False,True

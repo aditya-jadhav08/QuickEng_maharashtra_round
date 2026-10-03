@@ -66,6 +66,7 @@ Return ONLY valid JSON with these keys:
             data = json.loads(clean_text)
             break
         except Exception as e:
+            print("GEMINI ERROR:", e)
             err_str = str(e).lower()
             if "429" in err_str or "quota" in err_str or "rate" in err_str:
                 if attempt < 3:
