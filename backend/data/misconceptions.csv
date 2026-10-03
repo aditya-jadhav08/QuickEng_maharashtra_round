@@ -1,1 +1,1512 @@
-ID,Incorrect_Code,Correct_Code' in data.get('content', ''):\n                # Extract the part of t
+ID	Incorrect_Code	Correct_Code	Underlying_Misconception	Hint_L1_Socratic	Hint_L2_Conceptual	Hint_L3_Targeted	Resolution_Question
+1	"if x = 5:
+    print(""five"")"	"if x == 5:
+    print(""five"")"	Confuses assignment (`=`, which stores a value) with equality comparison (`==`, which asks a question and produces a boolean). The learner carries over the "equals" sign from math, where it covers both meanings.	Is this line asking Python a question or giving it an order?	A single = stores a value in a variable. A double == compares two values and gives back True or False. An if condition needs the comparison.	Change `if x = 5:` to `if x == 5:`.	Write an if statement that prints "perfect" when score is equal to 100.
+2	"for i in range(len(a) + 1):
+    print(a[i])"	"for i in range(len(a)):
+    print(a[i])"	Misunderstands zero-based indexing. A list of length n has valid indices 0 to n-1, so the learner treats the length as the last index (an off-by-one error that raises IndexError).	If the list a has 5 items, what is the index of the last one, and what does range(len(a) + 1) produce?	Indexes start at 0, so a list of length n has valid indexes 0 to n-1. range(n) already stops at n-1, so adding 1 goes one step past the end.	Remove the `+ 1` so the loop uses `range(len(a))`.	Which index do you use to get the last item of a list named data with 8 items, and how can you get it without counting?
+3	"def add_item(x, lst=[]):
+    lst.append(x)
+    return lst"	"def add_item(x, lst=None):
+    if lst is None:
+        lst = []
+    lst.append(x)
+    return lst"	Believes default arguments are re-evaluated on every call. They are evaluated once, at function definition time, so a mutable default is shared across all calls.	Does the default list get created every time you call the function, or only once?	Default values are evaluated once, when the def line runs. A mutable default like [] is then shared by every call that does not pass its own list.	Set the default to `lst=None`, then add `if lst is None: lst = []` as the first line of the body.	Rewrite `def add_tag(tag, tags=[]):` so each call without a list starts with a fresh empty list.
+4	"def add(a, b):
+    print(a + b)
+r = add(2, 3)  # r is None"	"def add(a, b):
+    return a + b
+r = add(2, 3)  # r is 5"	Conflates displaying a value (`print`, a side effect to the screen) with handing a value back to the caller (`return`). The learner assumes anything shown on screen is also available to the program.	After add(2, 3) runs, what does the variable r actually contain?	print shows text on the screen but gives nothing back to the program. return hands a value to the caller so it can be stored or reused.	Replace `print(a + b)` with `return a + b`.	Write a function square(x) that returns the square of x, then store the result of square(4) in a variable.
+5	"age = input(""Age: "")
+print(age + 1)"	"age = int(input(""Age: ""))
+print(age + 1)"	Assumes `input()` returns a number when the user types digits. It always returns a string, and the learner doesn't track data types as distinct from how values look when printed.	What type of data does input() give you, even if the user types 25?	input() always returns a string. Adding an int to a string is not allowed, so the text must be converted to a number first.	Wrap the call in int(): `age = int(input("Age: "))`.	Ask the user for two numbers with input() and print their sum.
+6	"for n in nums:
+    if n % 2 == 0:
+        nums.remove(n)"	nums = [n for n in nums if n % 2 != 0]	Assumes the loop iterates over a frozen snapshot of the list. Iteration uses a live index into the collection, so removing items shifts elements and causes some to be skipped.	When you remove an item from a list during a loop, what happens to the position of the items after it?	A for loop walks through the list by position. Removing an item shifts later items left, so the loop jumps over the one that moved into the gap.	Build a new list instead: `nums = [n for n in nums if n % 2 != 0]`.	Using a list comprehension, keep only the words longer than 3 letters from words = ["a", "tree", "to", "house"].
+7	"a = [1, 2, 3]
+b = a
+b.append(4)  # a also changed"	"a = [1, 2, 3]
+b = a.copy()
+b.append(4)  # a unchanged"	Thinks assignment copies the data, as if variables were boxes holding values. Variables are names bound to objects, so `b = a` creates a second name for the same list (aliasing).	After b = a, how many lists exist in memory?	Assignment does not copy data. It gives the same object a second name, so a change made through b is visible through a.	Replace `b = a` with `b = a.copy()` (or `b = a[:]`).	Make a copy of scores = [1, 2, 3] called backup, add 4 to backup only, and show that scores is unchanged.
+8	"if answer is ""yes"":
+    proceed()"	"if answer == ""yes"":
+    proceed()"	Confuses object identity (`is`, same object in memory) with value equality (`==`). Code may appear to work for some strings because of interning and then fail unpredictably.	What is the difference between asking whether two things are the same object and asking whether they have the same value?	`is` tests identity (same object in memory). `==` tests equality (same value). Strings with equal text are not guaranteed to be the same object.	Change `answer is "yes"` to `answer == "yes"`.	Write a condition that checks whether the string command is equal to "quit".
+9	"name = ""ada""
+print(name.upper)"	"name = ""ada""
+print(name.upper())"	Doesn't distinguish referring to a function (the object itself) from calling it (executing it). The learner treats `.upper` as a property or the result rather than as a callable.	Does name.upper give you the uppercase text, or something else?	A method name without parentheses refers to the method itself. Parentheses are what actually run it and produce a result.	Add parentheses: `name.upper()`.	Print the length of the string "python" using a method or function call written correctly.
+10	"s = ""hello""
+s[0] = ""H"""	"s = ""hello""
+s = ""H"" + s[1:]"	Assumes strings are mutable, like a row of editable characters. Strings are immutable, so "changing" one means building a new string and rebinding the name.	Can you change one character inside a string the way you change one item in a list?	Strings are immutable. You cannot edit them in place, but you can build a new string and assign it to the same name.	Replace `s[0] = "H"` with `s = "H" + s[1:]`.	Turn s = "cat" into "hat" without using s[0] = ...
+11	"nums = [3, 1, 2]
+nums = nums.sort()  # nums is None"	"nums = [3, 1, 2]
+nums.sort()
+# or: nums = sorted(nums)"	Expects every method to return the transformed result. In-place mutating methods return `None` by convention, and the learner doesn't distinguish "modify this object" from "produce a new object."	What does nums.sort() return, and what happens when you assign that to nums?	Methods that change an object in place, like sort(), return None. The sorted list is stored in the original object, not returned.	Call `nums.sort()` on its own line, or use `nums = sorted(nums)`.	Sort names = ["Zoe", "Al", "Max"] in two ways: once in place and once producing a new list.
+12	"count = 0
+def inc():
+    count += 1
+inc()  # UnboundLocalError"	"count = 0
+def inc():
+    global count
+    count += 1
+# better: def inc(c): return c + 1"	Believes a function can freely read and modify variables from the enclosing scope. Assigning inside a function makes the name local, and the learner lacks a model of scope and namespaces.	Inside inc(), does Python treat count as the global one or as a new variable?	Assigning to a name inside a function makes it local to that function. To change the outer variable you must say so with global, or better, pass the value in and return the new one.	Add `global count` as the first line inside inc(), or change it to `def inc(c): return c + 1`.	Write a function that increases a global counter called visits by 1 each time it is called.
+13	"def total(nums):
+    s = 0
+    for n in nums:
+        s += n
+        return s"	"def total(nums):
+    s = 0
+    for n in nums:
+        s += n
+    return s"	Doesn't realize `return` immediately terminates the function, including any loop. The learner views indentation as visual grouping rather than as defining control-flow structure.	On the first pass through the loop, which line runs after s += n?	return ends the function immediately, including any loop. Its indentation decides whether it runs on every pass or once at the end.	Unindent `return s` so it lines up with `for`.	Write a function that returns the product of all numbers in a list.
+14	"if color == ""red"" or ""blue"":
+    print(""warm or cool"")"	"if color in (""red"", ""blue""):
+    print(""warm or cool"")"	Assumes Python parses code like natural language ("color is red or blue"). Python evaluates `color == "red"` and `"blue"` as separate expressions, and a non-empty string is always truthy, so the condition is always true.	What does Python evaluate separately in `color == "red" or "blue"`, and is "blue" true or false on its own?	Python does not read this like English. It checks `color == "red"` and then `"blue"` as two expressions, and a non-empty string is always truthy.	Use `color in ("red", "blue")` or `color == "red" or color == "blue"`.	Write a condition that is True when day is "Sat" or "Sun".
+15	"grid = [[0] * 3] * 3
+grid[0][0] = 1  # all rows change"	"grid = [[0] * 3 for _ in range(3)]
+grid[0][0] = 1  # only row 0 changes"	Thinks `*` duplicates the inner list into independent copies. It repeats references to the same inner list, so this is the aliasing misconception (see ID 7) showing up in a nested data structure.	How many separate inner lists does [[0] * 3] * 3 really create?	The * operator repeats references to the same inner list. All three rows are the same object, so changing one changes all.	Build each row separately: `grid = [[0] * 3 for _ in range(3)]`.	Create a 4 x 2 grid of zeros where changing the first row does not change the others.
+16	"i = 0
+while i < 5:
+    print(i)"	"i = 0
+while i < 5:
+    print(i)
+    i += 1"	Believes the loop condition changes on its own, as if `i < 5` were a countdown. A `while` loop only re-checks the condition, so something in the body must change the state, otherwise it runs forever.	What inside this loop ever makes `i < 5` become False?	A while loop only re-checks its condition. Something in the body must change the variable, otherwise the loop never ends.	Add `i += 1` as the last line inside the loop.	Write a while loop that counts down from 10 to 1 and prints each number.
+17	"d = {""a"": 1}
+print(d[""b""])  # KeyError"	"d = {""a"": 1}
+print(d.get(""b"", 0))"	Assumes a missing key quietly gives an empty or `None` value, like a blank spreadsheet cell. Subscript access on a dict raises `KeyError`, so absence must be handled with `in`, `.get()`, or `try/except`.	What does Python do when you ask a dict for a key it does not have?	Square brackets raise KeyError for a missing key. .get(key, default) returns the default instead of failing.	Replace `d["b"]` with `d.get("b", 0)`.	Safely read the key "age" from the dict user and use 0 if it is missing.
+18	"d = {""a"": 1, ""b"": 2}
+for k, v in d:
+    print(k, v)"	"d = {""a"": 1, ""b"": 2}
+for k, v in d.items():
+    print(k, v)"	Thinks looping over a dict yields key-value pairs. Iterating a dict yields only its keys, so unpacking two names from a string key fails. `.items()` is needed for pairs.	When you loop over a dict directly, what does each pass give you?	Looping over a dict yields only its keys. To get key and value together, use the .items() view.	Change `for k, v in d:` to `for k, v in d.items():`.	Print every name and score from scores = {"Ana": 90, "Raj": 85} in the form "Ana: 90".
+19	"counts = {}
+for w in words:
+    counts[w] += 1"	"counts = {}
+for w in words:
+    counts[w] = counts.get(w, 0) + 1"	Assumes a key starts at 0 the first time it is used. `+=` reads the existing value first, and a new key has none. The learner doesn't separate creating an entry from updating one.	What does counts[w] return the very first time a word appears?	+= first reads the current value. A new key has no value yet, so the read fails. You must create the entry before updating it.	Use `counts[w] = counts.get(w, 0) + 1`.	Count how many times each letter appears in the string "banana" using a dict.
+20	d = {[1, 2]: "point"}  # TypeError	d = {(1, 2): "point"}	Believes any object can be a dict key. Keys must be hashable (immutable), because the dict locates entries by hash value, and a mutable list could change after insertion and become unfindable.	Why might Python refuse a list as a dict key?	Dict keys must be hashable, which means immutable. A list can change after being stored, so Python would lose track of where it was put.	Use a tuple as the key: `{(1, 2): "point"}`.	Store the value "home" for the location 12.5, 77.6 in a dict, using a valid key.
+21	"funcs = [lambda: i for i in range(3)]
+print([f() for f in funcs])  # [2, 2, 2]"	"funcs = [lambda i=i: i for i in range(3)]
+print([f() for f in funcs])  # [0, 1, 2]"	Thinks a function captures the value of an outer variable when it is created. It captures the variable itself and looks it up when called (late binding), by which time the loop has finished.	When does each lambda look up the value of i: when it is created or when it is called?	Functions look up outer variables at call time (late binding). By then the loop has finished, so every lambda sees the last value of i.	Bind the current value with a default argument: `lambda i=i: i`.	Create a list of three functions where the first returns 10, the second 20 and the third 30, using a loop.
+22	"def make():
+    result = 10
+make()
+print(result)  # NameError"	"def make():
+    result = 10
+    return result
+result = make()
+print(result)"	Believes variables created inside a function persist after it ends. Local names exist only during the call, so data must leave the function through `return`.	Where does the variable result exist after make() has finished running?	Variables created inside a function disappear when it ends. To get data out of a function, you return it and store it in the caller.	Add `return result` inside make() and write `result = make()` outside.	Write a function that computes the area of a rectangle and lets the caller print it.
+23	"list = [1, 2, 3]
+words = list(""abc"")  # TypeError"	"items = [1, 2, 3]
+words = list(""abc"")"	Treats names like `list`, `sum`, or `str` as reserved the way keywords are. Assigning to them creates a variable that shadows the built-in in the current scope, hiding the original.	What does the name list refer to after you write list = [1, 2, 3]?	Built-in names like list, str and sum are ordinary names, not reserved words. Assigning to them hides the original in your code.	Rename the variable to something else, such as `items`.	Explain why `sum = 10` followed by `sum([1, 2])` fails, and rename the variable to fix it.
+24	[x for x in nums if x > 0 else 0]  # SyntaxError	[x if x > 0 else 0 for x in nums]	Confuses the two roles of a condition. A trailing `if` filters items out, while `x if cond else y` is an expression that transforms every item, so it must go before the `for`.	Does the if in this comprehension decide which items to keep, or what value each item becomes?	A trailing if only filters items and cannot have an else. A value choice with else is an expression and goes before the for.	Move the condition to the front: `[x if x > 0 else 0 for x in nums]`.	Write a comprehension that replaces every negative number in nums with 0 and leaves others unchanged.
+25	flat = [x for x in row for row in matrix]	flat = [x for row in matrix for x in row]	Reads the comprehension's nested `for` clauses in the wrong order. They follow the same order as nested loops written out normally (outer loop first), but the learner reads them as natural-language phrasing.	If you wrote the same thing with two normal nested for loops, which loop would be on the first line?	Nested for clauses in a comprehension appear in the same order as the nested loops: outer loop first, then inner loop.	Reorder to `[x for row in matrix for x in row]`.	Flatten [[1, 2], [3], [4, 5]] into one list using a single comprehension.
+26	"nums = [1, 2, 3]
+[n * 2 for n in nums]
+print(nums)  # [1, 2, 3]"	"nums = [1, 2, 3]
+nums = [n * 2 for n in nums]
+print(nums)  # [2, 4, 6]"	Thinks a list comprehension transforms the original list in place, like a loop with side effects. It builds and returns a new list, which is lost unless assigned to a name.	What happens to the new list that the comprehension builds?	A comprehension creates a new list and does not change the original. If you do not assign the result to a name, it is thrown away.	Assign the result: `nums = [n * 2 for n in nums]`.	Make a new list called doubled that holds each number of [4, 5, 6] doubled, keeping the original as it was.
+27	"for i in len(items):
+    print(items[i])  # TypeError"	"for i in range(len(items)):
+    print(items[i])
+# or: for item in items: print(item)"	Treats a number as something you can loop over, as if "for each of 5" were valid. `len()` returns a single integer, and a `for` loop needs an iterable such as `range(n)`.	Is len(items) a collection you can walk through, or a single value?	len() returns one integer. A for loop needs an iterable, and range(n) turns a number into a sequence of values from 0 to n-1.	Use `for i in range(len(items)):`, or just `for item in items:`.	Print the index and value of each item in colors = ["red", "blue"] using range(len(...)).
+28	"for n in nums:
+    total = 0
+    total += n
+print(total)  # last item only"	"total = 0
+for n in nums:
+    total += n
+print(total)"	Doesn't see that the loop body runs from the top on every pass. Initialization placed inside the body resets the accumulator each time. The learner confuses code that sets up state with code that repeats.	How many times does `total = 0` run if the loop goes over five numbers?	Everything in the loop body repeats on every pass. Setup code that should run once must go before the loop.	Move `total = 0` above the `for` line.	Write code that finds the largest number in nums without using max().
+29	"d = {""x"": 1, ""y"": 2}
+first = d.keys()[0]  # TypeError"	"d = {""x"": 1, ""y"": 2}
+first = next(iter(d))
+# or: list(d.keys())[0]"	Assumes `.keys()` returns an indexable list. It returns a view object, which can be iterated and checked for membership but not indexed.	Can you pick an item from d.keys() with an index like [0]?	keys() returns a view object. You can loop over it or test membership, but you cannot index it. Convert it to a list or use next(iter(...)).	Use `first = next(iter(d))` or `list(d.keys())[0]`.	Get the first value of the dict ages = {"A": 30, "B": 25}.
+30	"def reset(n):
+    n = 0
+x = 5
+reset(x)
+print(x)  # still 5"	"def reset(n):
+    return 0
+x = 5
+x = reset(x)
+print(x)  # 0"	Believes a function parameter is the caller's variable itself, so assigning to it changes the original. A parameter is a new local name. Rebinding it inside the function never affects the caller's name.	Inside reset(), does n = 0 change x in the caller, or only the name n?	A parameter is a new local name pointing at the same value. Rebinding it inside the function does not touch the caller's variable.	Return the new value and assign it: `x = reset(x)`.	Write a function double(n) that returns twice its input, and use it to update a variable score.
+31	"class Dog:
+    def bark():
+        print(""woof"")
+Dog().bark()  # TypeError"	"class Dog:
+    def bark(self):
+        print(""woof"")
+Dog().bark()"	Thinks a method is just a function that happens to sit inside a class. When called on an instance, Python passes that instance as the first argument automatically, so the method must declare a parameter to receive it.	When you call Dog().bark(), what does Python pass to bark automatically?	Calling a method on an instance passes that instance as the first argument. The method must have a parameter, normally self, to receive it.	Change `def bark():` to `def bark(self):`.	Fix this method signature inside a class: `def set_name(name):`.
+32	"class User:
+    def __init__(self, n):
+        name = n
+print(User(""Ada"").name)  # AttributeError"	"class User:
+    def __init__(self, n):
+        self.name = n
+print(User(""Ada"").name)"	Doesn't separate a local variable (which vanishes when `__init__` ends) from an attribute stored on the object. Only assignment through `self.` attaches data to the instance.	After __init__ finishes, where does the variable name live?	A plain variable inside a method disappears when the method ends. Only values stored with self. are kept on the object.	Change `name = n` to `self.name = n`.	Write a class Book whose __init__ stores a title and an author on the object.
+33	"try:
+    n = int(text)
+except:
+    pass"	"try:
+    n = int(text)
+except ValueError:
+    print(""Please enter a number"")"	Treats exceptions as nuisances to silence instead of information. A bare `except` also hides unrelated bugs (even typos and Ctrl+C), so the learner should name the specific failure they expect.	If a typo caused an error inside this try block, would you ever find out?	A bare except catches every error and pass hides it. Catch the specific error you expect and handle it in a useful way.	Use `except ValueError:` and print a helpful message instead of `pass`.	Ask for a number and print "Invalid number" only when the text cannot be converted to an int.
+34	"with open(""log.txt"", ""w"") as f:
+    f.write(""new entry\n"")  # wipes old log"	"with open(""log.txt"", ""a"") as f:
+    f.write(""new entry\n"")"	Assumes `"w"` means "write more" to the file. Write mode truncates the file the moment it is opened, while append mode (`"a"`) adds to the end.	What does opening a file in "w" mode do to its existing content?	Write mode empties the file as soon as it is opened. Append mode ("a") keeps existing content and adds to the end.	Change the mode from `"w"` to `"a"`.	Add the line "done" to the end of notes.txt without losing what is already there.
+35	"f = open(""data.txt"")
+print(f.read())
+print(f.read())  # prints empty string"	"f = open(""data.txt"")
+text = f.read()
+print(text)
+print(text)"	Thinks a file object is the file's contents, like a string. It is a stream with a current position, so after one `read()` the position is at the end and a second read returns nothing.	After the first read(), where is the file's position?	A file object is a stream with a current position. read() moves it to the end, so a second read() returns an empty string.	Store the result once: `text = f.read()` and reuse text.	Read a file once and print both its length and its content.
+36	"score = 10
+print(""Score: "" + score)  # TypeError"	"score = 10
+print(f""Score: {score}"")"	Expects `+` to join text and numbers automatically, as `print("a", 5)` or some other languages do. Python doesn't convert types implicitly here, so the number must be converted or formatted into the string.	What types are on each side of the + in this line?	Python does not convert numbers to text when you use + with a string. You must convert the number or use an f-string.	Use `print(f"Score: {score}")` or `"Score: " + str(score)`.	Print "Total: 95" using the integer variable total = 95 in an f-string.
+37	"def fact(n):
+    return n * fact(n - 1)
+# RecursionError"	"def fact(n):
+    if n <= 1:
+        return 1
+    return n * fact(n - 1)"	Believes recursion knows when to stop, as a math definition "obviously" does. Each call must reach a base case that returns without recursing, otherwise the calls never end.	When would fact(n) ever stop calling itself?	Every recursive function needs a base case that returns without calling itself again. Without it the calls continue until Python stops them.	Add `if n <= 1: return 1` before the recursive return.	Write a recursive function countdown(n) that prints n down to 1 and then stops.
+38	"s = ""python""
+first_four = s[0:3]  # ""pyt"""	"s = ""python""
+first_four = s[0:4]  # ""pyth"""	Reads the slice end index as inclusive. In `s[a:b]` the stop index is excluded, so the slice has `b - a` items.	Is the character at index 3 included in s[0:3]?	In a slice s[a:b] the stop index is excluded, so you get b - a characters.	Change `s[0:3]` to `s[0:4]`.	Which slice gives the last three letters of "python"?
+39	"mid = len(items) / 2
+print(items[mid])  # TypeError"	"mid = len(items) // 2
+print(items[mid])"	Expects `/` to return a whole number when the division is exact. In Python 3 `/` always returns a float, and indexes must be integers, so floor division `//` is needed.	What type does / return in Python 3, even when the division is exact?	/ always returns a float, and list indexes must be integers. // does floor division and returns an int.	Replace `/` with `//`.	Find the middle item of a list with 7 elements using integer division.
+40	"t = (5)
+print(type(t))  # int"	"t = (5,)
+print(type(t))  # tuple"	Believes parentheses create a tuple. It is the comma that does, and parentheses around a single value just group it, as in math.	Which character makes a tuple: the parentheses or the comma?	A comma creates a tuple. Parentheses around one value are only grouping, as in maths.	Add a trailing comma: `t = (5,)`.	Define a tuple that holds only the string "data".
+41	"seen = {}
+seen.add(3)  # AttributeError"	"seen = set()
+seen.add(3)"	Assumes empty braces make an empty set because non-empty braces like `{1, 2}` do. `{}` is reserved for an empty dict, so an empty set requires `set()`.	What type of object does {} create?	Empty braces create an empty dict, not a set. An empty set must be created with set().	Replace `{}` with `set()`.	Create an empty set and an empty dict in two separate lines.
+42	"if 0.1 + 0.2 == 0.3:
+    print(""equal"")  # never prints"	"import math
+if math.isclose(0.1 + 0.2, 0.3):
+    print(""equal"")"	Thinks floats store decimal numbers exactly. They are binary approximations, so results of arithmetic can differ by tiny amounts and should be compared with a tolerance.	Can a computer store 0.1 exactly in binary?	Floats are binary approximations, so results of arithmetic can differ by a tiny amount. Compare them within a tolerance, not with ==.	Use `math.isclose(0.1 + 0.2, 0.3)`.	Write a check that is True when 0.7 + 0.1 is close to 0.8.
+43	"# in a file named random.py
+import random
+print(random.randint(1, 6))  # AttributeError"	"# rename the file to dice.py
+import random
+print(random.randint(1, 6))"	Assumes `import random` always finds the standard library. Python searches the current folder first, so a learner's own file with the same name shadows the library module.	When you write import random, which file does Python find first?	Python searches the current folder before the standard library. A file named random.py shadows the real module.	Rename your file to something else, such as dice.py (and delete any leftover __pycache__).	Name three file names you should avoid because they match standard library modules.
+44	"class Cart:
+    items = []
+a, b = Cart(), Cart()
+a.items.append(""x"")
+print(b.items)  # ['x']"	"class Cart:
+    def __init__(self):
+        self.items = []
+a, b = Cart(), Cart()
+a.items.append(""x"")
+print(b.items)  # []"	Confuses class-level attributes (one object shared by every instance) with instance attributes (created per object in `__init__`). A mutable class attribute is shared state.	Is items stored once per Cart object, or once for the whole class?	An attribute defined in the class body is shared by all instances. Per-object data must be created in __init__ with self.	Move the list into `def __init__(self): self.items = []`.	Create a class Player where every player gets their own empty list of badges.
+45	"if score >= 90:
+    grade = ""A""
+if score >= 80:
+    grade = ""B""
+# score 95 ends up ""B"""	"if score >= 90:
+    grade = ""A""
+elif score >= 80:
+    grade = ""B"""	Thinks consecutive `if` statements are linked, so a later one runs only when the earlier one failed. Each `if` is evaluated independently, and `elif` is what makes the branches mutually exclusive.	If score is 95, how many of the if statements are checked?	Each separate if is tested independently. elif only runs when the earlier conditions were False.	Change the second `if` to `elif`.	Write grade logic with if / elif / else for 90+, 80+ and anything lower.
+46	"fruits = [""apple"", ""pear""]
+for i in fruits:
+    print(fruits[i])  # TypeError"	"fruits = [""apple"", ""pear""]
+for i, f in enumerate(fruits):
+    print(i, f)"	Thinks the loop variable of a `for` loop is a position. It is the element itself, so using it as an index fails. Getting both position and element needs `enumerate()`.	In `for i in fruits`, is i a position or a fruit?	The loop variable is the element itself, not its index. enumerate() gives both position and element.	Use `for i, f in enumerate(fruits):`.	Print each color of colors = ["red", "blue"] with its position number starting at 1.
+47	"for i in range(5, 0):
+    print(i)  # prints nothing"	"for i in range(5, 0, -1):
+    print(i)"	Expects `range` to work out the direction on its own. The default step is +1, so a start larger than the stop gives an empty sequence unless a negative step is given.	Which direction does range(5, 0) move, and what is the default step?	The default step is +1, so a start larger than the stop gives an empty sequence. Counting down needs a negative step.	Add the step: `range(5, 0, -1)`.	Print the even numbers from 10 down to 2.
+48	"sq = (n * n for n in nums)
+print(sum(sq))
+print(sum(sq))  # 0"	"sq = [n * n for n in nums]
+print(sum(sq))
+print(sum(sq))"	Treats a generator expression like a stored list. A generator is a one-shot iterator that produces values on demand, so once consumed it is empty.	What is left in the generator after sum(sq) has used it once?	A generator produces values once. After it has been consumed it is empty, unlike a list.	Use square brackets to build a list: `sq = [n * n for n in nums]`.	Explain why you can loop over a list twice but over a generator only once, and show it in code.
+49	"pairs = zip(a, b)
+print(len(pairs))  # TypeError"	"pairs = list(zip(a, b))
+print(len(pairs))"	Assumes `zip` builds a list. It returns a lazy iterator with no length and no indexing, so it must be converted with `list()` or consumed in a loop.	Does zip give you a list, or something else?	zip returns a lazy iterator. It has no length and no indexing until you convert it with list().	Use `pairs = list(zip(a, b))`.	Combine names and ages into pairs and print how many there are.
+50	"d = {""x"": 9, ""y"": 3}
+best = max(d)  # ""y"""	"d = {""x"": 9, ""y"": 3}
+best = max(d, key=d.get)  # ""x"""	Forgets that iterating a dict yields keys, so `max(d)` compares the keys alphabetically. Finding the key with the biggest value requires telling `max` what to compare.	What does max(d) compare when d is a dict?	Looping over a dict gives keys, so max compares the keys. The key argument tells max what to compare instead.	Use `max(d, key=d.get)`.	Find the name with the lowest score in scores = {"Ana": 90, "Raj": 85}.
+51	"import math
+print(sqrt(16))  # NameError"	"import math
+print(math.sqrt(16))"	Believes importing a module drops its contents into the current namespace. `import math` only binds the name `math`, so its functions are reached through it.	After import math, which name has been added to your program?	import math adds only the name math. Its functions are reached through it, as math.sqrt.	Write `math.sqrt(16)`, or use `from math import sqrt`.	Print the value of pi using the math module.
+52	"s = ""hello""
+if s.find(""h""):
+    print(""found"")  # never prints"	"s = ""hello""
+if ""h"" in s:
+    print(""found"")"	Treats `find` as a yes/no test. It returns an index (0 here, which is falsy) or -1 when absent (which is truthy), so the check is both wrong and inverted.	What does find return when the letter is at the very start, and what does it return when the letter is missing?	find returns an index, and 0 is falsy while -1 is truthy. It is a position search, not a yes/no test.	Use the in operator: `if "h" in s:`.	Check whether "@" appears in the string email.
+53	"qty = 0
+if not qty:
+    print(""missing"")  # wrong"	"qty = 0
+if qty is None:
+    print(""missing"")"	Equates "falsy" with "absent". Valid values such as `0`, `""` and `[]` are also falsy, so an existence check must test for `None` specifically.	Is 0 the same as "no value"?	0, "", [] and None are all falsy, but only None means nothing was given. To test for absence, check for None directly.	Use `if qty is None:`.	Write a function that prints "missing" only when its argument is None, not when it is 0.
+54	"a = [[1, 2], [3, 4]]
+b = a.copy()
+b[0][0] = 99
+print(a[0][0])  # 99"	"import copy
+a = [[1, 2], [3, 4]]
+b = copy.deepcopy(a)
+b[0][0] = 99
+print(a[0][0])  # 1"	Believes `.copy()` duplicates everything. It copies only the outer list, so the inner lists are still shared. Nested structures need a deep copy.	Does .copy() copy the lists inside the list too?	.copy() makes a shallow copy. The outer list is new, but the inner lists are still shared. copy.deepcopy copies everything.	Import copy and use `b = copy.deepcopy(a)`.	Copy a list of lists so that changing the copy's first inner list leaves the original untouched.
+55	"def counter():
+    n = 0
+    def inc():
+        n += 1
+        return n
+    return inc  # UnboundLocalError"	"def counter():
+    n = 0
+    def inc():
+        nonlocal n
+        n += 1
+        return n
+    return inc"	Thinks an inner function can reassign a variable of the enclosing function. Assignment makes the name local to `inc`, so rebinding the outer variable must be declared with `nonlocal`.	Does `n += 1` inside inc() change the n from counter(), or create a new local one?	Assigning inside the inner function makes n local to it. nonlocal tells Python the name belongs to the enclosing function.	Add `nonlocal n` as the first line of inc().	Write a closure make_adder_counter() that returns a function increasing a stored total by 5 on each call.
+56	"def minmax(L):
+    return min(L), max(L)
+low = minmax(nums)
+print(low + 1)  # TypeError"	"def minmax(L):
+    return min(L), max(L)
+low, high = minmax(nums)
+print(low + 1)"	Imagines a function can return several separate values. It returns one tuple, so the caller must unpack it or index into it.	How many values does minmax really return?	A function returns one object. Returning two values creates a tuple, which the caller must unpack or index.	Unpack the result: `low, high = minmax(nums)`.	Write a function that returns the first and last items of a list, and store them in two variables.
+57	"a = [1, 2, 3]
+a.append([4, 5])
+print(a)  # [1, 2, 3, [4, 5]]"	"a = [1, 2, 3]
+a.extend([4, 5])
+print(a)  # [1, 2, 3, 4, 5]"	Expects `append` to add every item of what it is given. It adds exactly one element, here the whole list as a single nested item, while `extend` adds the items one by one.	How many items does append add to the list?	append adds exactly one element, even if it is itself a list. extend adds each item of an iterable one by one.	Use `a.extend([4, 5])`.	Join [1, 2] and [3, 4] into one flat list in two different ways.
+58	"d = {""a"": 1, ""b"": 2}
+for k in d:
+    if d[k] == 1:
+        del d[k]  # RuntimeError"	"d = {""a"": 1, ""b"": 2}
+d = {k: v for k, v in d.items() if v != 1}"	Assumes a dict can be edited while it is being looped over. Changing its size during iteration invalidates the iterator, so build a new dict or loop over a copy of the keys.	What happens to a dict's size while a loop is still reading it?	Changing the size of a dict while iterating invalidates the loop. Build a new dict or loop over a copy.	Create a new dict with a comprehension, or loop over `list(d)`.	Remove all items with a value of 0 from stock = {"a": 0, "b": 4}.
+59	print("10" < "9")  # True	print(int("10") < int("9"))  # False	Reads digit strings as numbers when comparing. Strings compare character by character, so `"1"` comes before `"9"` and the result is the opposite of the numeric one.	Does Python compare "10" and "9" as numbers or as text?	Strings compare character by character, so "1" comes before "9" and "10" is smaller. Convert to int to compare numbers.	Compare `int("10") < int("9")`.	Sort the strings ["10", "9", "100"] in numeric order.
+60	print(round(2.5))  # 2	"import math
+print(math.floor(2.5 + 0.5))  # 3"	Assumes `round` always rounds halves up, as taught in school. Python uses round-half-to-even, so `round(2.5)` is 2 and `round(3.5)` is 4. The fix shown works for positive numbers only.	What does round(2.5) return, and what about round(3.5)?	Python rounds halves to the nearest even number (banker's rounding), so 2.5 becomes 2. Always rounding up needs a different method.	Use `math.floor(x + 0.5)` for positive numbers.	Round 0.5, 1.5 and 2.5 and explain the pattern you see.
+61	"name = ""  ada ""
+name.strip()
+print(name)  # still padded"	"name = ""  ada ""
+name = name.strip()
+print(name)"	Expects a string method to change the variable it was called on. Strings are immutable, so the method returns a new string, and that result is lost unless it is assigned to a name.	Does strip() change name, or does it give you something back?	Strings are immutable, so string methods return a new string. If you do not store it, it is lost.	Assign it back: `name = name.strip()`.	Convert "  Hello " to lowercase with no spaces around it and print it.
+62	"if input(""Age: "") == 18:  # never True
+    print(""adult"")"	"if int(input(""Age: "")) == 18:
+    print(""adult"")"	Treats the text "18" and the number 18 as the same thing because they look alike when printed. `input()` returns a string, and a string never equals an int in Python.	What type is the value returned by input(), and what type is 18?	input() returns a string, and a string is never equal to an int, even if they look the same when printed.	Convert first: `int(input("Age: ")) == 18`.	Ask for a number and print "even" if it is even.
+63	print "hello"  # SyntaxError	print("hello")	Carries over syntax from old tutorials, where print was a statement. In Python 3 `print` is an ordinary function, so it must be called with parentheses.	Is print a statement or a function in Python 3?	In Python 3 print is a function, so its arguments go inside parentheses.	Write `print("hello")`.	Print the sentence "Hello, world" on one line and the number 42 on the next.
+64	"if x > 3
+    print(x)  # SyntaxError"	"if x > 3:
+    print(x)"	Treats the colon as optional punctuation. It marks the start of a block, and Python needs it to know that an indented body follows the header.	What symbol tells Python that an indented block follows?	A colon at the end of a header line marks the start of a block. Without it, Python cannot tell the line is a header.	Add `:` at the end of the if line.	Fix the header: `while count < 3`.
+65	"def greet():
+print(""hi"")  # IndentationError"	"def greet():
+    print(""hi"")"	Sees indentation as formatting for readability. In Python it is syntax that defines which statements belong to a function, loop or condition.	What line should belong inside greet(), and how does Python know?	Indentation is part of Python's syntax. It shows which statements belong to a function, loop or condition.	Indent `print("hi")` by four spaces.	Fix the indentation in: `for i in range(3):` followed by `print(i)` on the next line.
+66	"for n in nums:
+    if n == 3:
+        print(""found"")
+else:
+    print(""not found"")  # prints even if found"	"for n in nums:
+    if n == 3:
+        print(""found"")
+        break
+else:
+    print(""not found"")"	Reads a loop's `else` as the else of the inner `if`. It belongs to the loop and runs only when the loop finishes without hitting `break`, so without `break` it always runs.	Which statement does that else belong to: the if or the for?	A loop's else runs when the loop ends without a break. Without a break, it runs every time.	Add `break` after `print("found")`.	Write a loop that searches a list and prints "missing" only if the item is not found.
+67	"for n in nums:
+    if n < 0:
+        break  # stops the whole loop
+    print(n)"	"for n in nums:
+    if n < 0:
+        continue
+    print(n)"	Mixes up leaving the loop with skipping one pass. `break` ends the loop entirely, while `continue` jumps to the next iteration.	What is the difference between leaving a loop and skipping to its next pass?	break ends the whole loop. continue skips the rest of the current pass and moves on to the next item.	Replace `break` with `continue`.	Print only the positive numbers from [3, -1, 4, -5, 2] without stopping early.
+68	"if x > 0 and < 10:  # SyntaxError
+    print(""ok"")"	"if 0 < x < 10:
+    print(""ok"")"	Drops the repeated subject, as in the English phrase "x is above 0 and below 10". Python needs a complete comparison on each side of `and`, or the chained form `0 < x < 10`.	What does Python need on each side of `and`?	Each side of and must be a complete expression. Python also lets you chain comparisons as 0 < x < 10.	Write `0 < x < 10` or `x > 0 and x < 10`.	Write a condition that is True when age is between 18 and 65 inclusive.
+69	print(-7 // 2)  # -4, expected -3	print(int(-7 / 2))  # -3	Assumes integer division cuts off the decimals. `//` is floor division, which rounds toward negative infinity, so negative results come out one lower than truncation would give.	Does // cut off decimals, or round in a particular direction?	// is floor division and rounds toward negative infinity. For -3.5 that gives -4, not -3.	Use `int(-7 / 2)` to cut off decimals.	Calculate -9 // 4 by hand and check it in Python.
+70	"a = b
+b = a  # both now hold b's old value"	a, b = b, a	Believes assignments happen "at the same time" like a mathematical swap. They run one after another, so the first line overwrites `a` and its old value is lost before it can be copied.	After the first line a = b runs, what happened to a's old value?	Assignments run one after the other. The first line overwrites a before its old value is saved.	Use tuple swap: `a, b = b, a`.	Swap the values of first and second without using a third variable.
+71	",".join([1, 2, 3])  # TypeError	",".join(str(n) for n in [1, 2, 3])	Expects `join` to convert items to text as `print` does. It only accepts strings, so each item must be converted first.	What type of items does join accept?	join only works on strings. Numbers must be converted first.	Use `",".join(str(n) for n in [1, 2, 3])`.	Join the numbers [4, 5, 6] into the text "4-5-6".
+72	pos = nums.index(9)  # ValueError if 9 is absent	"if 9 in nums:
+    pos = nums.index(9)"	Assumes a failed search returns a sentinel such as -1, like `str.find` does. `list.index` raises `ValueError` when the item is missing, so presence must be checked first.	What happens when index() cannot find the item?	list.index raises ValueError if the item is not there. Check with `in` first, or use try/except.	Write `if 9 in nums:` before calling nums.index(9).	Return the position of x in a list, or -1 if it is not present.
+73	"nums = [10, 20, 30]
+nums.remove(2)  # ValueError"	"nums = [10, 20, 30]
+del nums[2]
+# or: nums.pop(2)"	Reads `remove` as "remove at position". It removes the first item equal to the value given, so removing by position needs `del` or `pop`.	Does remove take a position or a value?	remove deletes the first item equal to the value given. To delete by position, use del or pop.	Use `del nums[2]` or `nums.pop(2)`.	Delete the first item of a list in two different ways.
+74	sorted([3, "a", 1])  # TypeError	sorted(map(str, [3, "a", 1]))	Assumes any values can be ordered against each other. Python only compares values of compatible types, so a mixed list has to be converted to one type first.	Can Python decide whether 3 is bigger than "a"?	Sorting needs items that can be compared with each other. Numbers and strings cannot, so convert them to one type.	Convert first: `sorted(map(str, items))`.	Sort the list [3, "a", 1] so all items are compared as text.
+75	sorted(words, key=len())  # TypeError	sorted(words, key=len)	Doesn't separate passing a function from calling it. `key` needs the function object itself so `sorted` can call it on each item. Writing `len()` calls it right away with no argument.	What is the difference between len and len() ?	key expects a function object that sorted will call for each item. Writing len() calls it right now without an argument.	Remove the parentheses: `key=len`.	Sort a list of words by their last letter.
+76	"def f(a=1, b):  # SyntaxError
+    return a + b"	"def f(b, a=1):
+    return a + b"	Thinks parameters can be listed in any order. Positional arguments are matched left to right, so every parameter after one with a default must have a default too.	Which parameters can be left out when calling f?	Parameters without defaults must come before those with defaults, so Python can match arguments from left to right.	Reorder to `def f(b, a=1):`.	Fix this signature: `def greet(greeting="Hi", name):`.
+77	"def total(nums):
+    return sum(nums)
+total(1, 2, 3)  # TypeError"	"def total(*nums):
+    return sum(nums)
+total(1, 2, 3)"	Assumes a function accepts any number of arguments and gathers them itself. The parameter list fixes how many are allowed, and `*nums` is what collects extras into a tuple.	How many arguments does total(nums) accept?	A normal parameter takes one argument. *nums collects any number of extra positional arguments into a tuple.	Change the parameter to `*nums`.	Write a function that accepts any number of numbers and returns the largest.
+78	"def add(a, b):
+    return a + b
+pair = (2, 3)
+add(pair)  # TypeError"	"def add(a, b):
+    return a + b
+pair = (2, 3)
+add(*pair)"	Thinks passing a tuple supplies its items as separate arguments. It is passed as one argument, and the `*` operator is needed to unpack it into several.	How many arguments are you passing when you write add(pair)?	A tuple passed this way is one argument. The * operator unpacks it into separate arguments.	Call it with `add(*pair)`.	Call the function max_of(a, b, c) with the values stored in a list of 3 numbers.
+79	"if __name__ == ""main"":
+    run()  # never runs"	"if __name__ == ""__main__"":
+    run()"	Treats this idiom as a magic phrase to memorize rather than a comparison. `__name__` is set to the exact string `"__main__"` when a file is run directly, so any other spelling is never true.	What exact string does __name__ hold when a file is run directly?	__name__ is set to the string "__main__" with double underscores. Any other spelling never matches.	Write `"__main__"`.	Explain what happens to code under this check when the file is imported by another file.
+80	"if input(""Continue? "") == ""Yes"":
+    go()  # fails for ""yes"""	"if input(""Continue? "").strip().lower() == ""yes"":
+    go()"	Expects string comparison to behave as a person reads it. Python compares exact characters, so case and stray spaces matter, and user input should be normalised first.	Would "yes" or " Yes " match "Yes"?	String comparison is exact, so capital letters and spaces matter. Clean the input before comparing.	Use `.strip().lower() == "yes"`.	Ask for a name and greet the user whether they type it in capitals or small letters.
+81	len(12345)  # TypeError	len(str(12345))	Thinks a number is a sequence of digits. An integer is a single value with no length, so counting digits means converting it to a string first.	Does the number 12345 have a length?	An int is one value, not a sequence of digits. To count digits, convert it to a string first.	Use `len(str(12345))`.	Print how many digits are in the number n = 9081.
+82	"prices = {""apple"": 3}
+if 3 in prices:  # False
+    print(""found"")"	"prices = {""apple"": 3}
+if 3 in prices.values():
+    print(""found"")"	Assumes `in` searches everything inside a dict. For a dict it tests keys only, so searching values needs `.values()`.	When you ask whether 3 is in a dict, which part of the dict is checked?	`in` on a dict tests keys only. Use .values() to search values.	Use `3 in prices.values()`.	Check whether any student in grades = {"Ana": 90} scored 90.
+83	"words = [""hi"", ""yo"", ""hey""]
+d = {len(w): w for w in words}  # {2: ""yo"", 3: ""hey""}"	"words = [""hi"", ""yo"", ""hey""]
+d = {}
+for w in words:
+    d.setdefault(len(w), []).append(w)"	Believes a dict key can hold several values by repeating it. Each key is unique, so a later entry silently replaces an earlier one. Grouping needs a list as the value.	What happens to the first entry when two words have the same length?	Dict keys are unique, so a later entry overwrites an earlier one. To keep several, store a list as the value.	Use `d.setdefault(len(w), []).append(w)` in a loop.	Group the words ["cat", "dog", "bird"] by their first letter.
+84	avg = sum(nums) / len(nums)  # ZeroDivisionError if empty	avg = sum(nums) / len(nums) if nums else 0	Writes code only for the typical case. An empty input is a valid case too, and the learner hasn't built the habit of asking what happens at the boundaries.	What does len(nums) equal when the list is empty?	Empty input is a valid case. Dividing by zero raises an error, so handle the empty list first.	Add a check: `... if nums else 0`.	Write a function that returns the average of a list, or None if the list is empty.
+85	int("3.7")  # ValueError	int(float("3.7"))  # 3	Assumes `int()` can parse any number written as text and cut off the decimals. Applied to a string it accepts only whole-number text, so the string must go through `float` first.	Can int() read the text "3.7" directly?	int() on a string accepts only whole-number text. A decimal string must go through float first.	Use `int(float("3.7"))`.	Convert the text "12.9" to a whole number.
+86	"flag = ""False""
+if bool(flag):
+    print(""on"")  # prints"	"flag = ""False""
+if flag == ""True"":
+    print(""on"")"	Thinks converting the text "False" gives the boolean False. `bool()` on a string checks only whether it is empty, so every non-empty string is True.	Is "False" an empty string?	bool() on a string is False only when the string is empty. Any other text, including "False", is True.	Compare the text: `flag == "True"`.	Turn the text "yes" or "no" into a real boolean.
+87	"x = 5
+x++  # SyntaxError"	"x = 5
+x += 1"	Carries over an increment operator from other languages. Python has no `++`, so adding one is written as an assignment with `+= 1`.	Does Python have a ++ operator?	Python has no ++ or --. Use += 1 to add one.	Replace `x++` with `x += 1`.	Write a loop that adds 1 to a counter until it reaches 5.
+88	"f = open(""a.txt"", ""w"")
+f.write(""hi"")
+print(open(""a.txt"").read())  # may be empty"	"with open(""a.txt"", ""w"") as f:
+    f.write(""hi"")
+print(open(""a.txt"").read())"	Believes `write` puts data on disk immediately. Output is buffered and only guaranteed to be saved once the file is flushed or closed, so closing is part of the work.	When is data from write() guaranteed to be saved?	Written data is buffered and only guaranteed to be on disk after the file is flushed or closed. A with block closes it for you.	Wrap the code in `with open(...) as f:`.	Write two lines to out.txt and make sure they are saved before reading them back.
+89	open("C:\new\table.txt")  # \n and \t become characters	open(r"C:\new\table.txt")	Treats the backslash as an ordinary character inside a string literal. It starts an escape sequence, so `\n` becomes a newline. A raw string (`r"..."`) or doubled backslashes are needed.	What does \n mean inside a normal string?	A backslash starts an escape sequence, so \n becomes a newline and \t becomes a tab. Raw strings treat backslashes literally.	Add an r before the quote: `r"C:\new\table.txt"`.	Write the path D:\temp\notes.txt safely in two different ways.
+90	"with open(""a.txt"") as f:
+    lines = f.readlines()
+if lines[0] == ""yes"":  # item is ""yes\n""
+    go()"	"with open(""a.txt"") as f:
+    lines = f.readlines()
+if lines[0].strip() == ""yes"":
+    go()"	Doesn't realise each line read from a file keeps its trailing newline character. The text looks like "yes" when printed but is not equal to it.	Does the line you read from the file include any invisible characters at the end?	readlines() keeps the newline at the end of every line. The text looks the same when printed but is not equal.	Use `lines[0].strip() == "yes"`.	Read a file and print its lines without extra blank lines.
+91	"name = ""Ada""
+print(""Hello {name}"")  # prints {name}"	"name = ""Ada""
+print(f""Hello {name}"")"	Thinks braces in any string are filled in automatically. Only a string with the `f` prefix evaluates the expressions inside the braces. Otherwise they are ordinary characters.	What turns a normal string into one that fills in {name}?	Only f-strings, which start with f before the quote, evaluate expressions inside braces.	Write `f"Hello {name}"`.	Print "Ada is 20" using the variables name and age in an f-string.
+92	a, b = "1 2 3".split()  # ValueError	a, b, c = "1 2 3".split()	Assumes unpacking takes as many items as it can. The number of names on the left must match the number of items exactly, or Python raises an error.	How many items does split() give for "1 2 3", and how many names are on the left?	Unpacking needs the same number of names as items. A mismatch raises ValueError.	Use three names: `a, b, c = ...`.	Unpack the text "x y" into two variables.
+93	"for i in range(1, 10):
+    print(i)  # stops at 9"	"for i in range(1, 11):
+    print(i)"	Reads the end value of `range` as inclusive, as in "1 to 10". The stop value is excluded, which is the same convention as in slicing.	Is 10 included in range(1, 10)?	The stop value of range is excluded, just like in slicing.	Use `range(1, 11)`.	Print the numbers 1 to 20 inclusive.
+94	"x = 0.0
+while x != 1.0:
+    x += 0.1  # never exactly 1.0"	"for step in range(1, 11):
+    x = step / 10"	Expects repeated float addition to land exactly on a decimal target. Rounding errors build up, so the exact value is never reached. Loops should be driven by integers or use `<`.	Will x ever be exactly 1.0 after adding 0.1 repeatedly?	Floats cannot store 0.1 exactly, so errors build up and the exact target is skipped. Use integers to drive the loop.	Loop over integers and divide: `x = step / 10`.	Write a loop that prints 0.0, 0.5, 1.0, 1.5 and 2.0 without testing floats for equality.
+95	"t = (1, 2, 3)
+t[0] = 9  # TypeError"	"t = (1, 2, 3)
+t = (9,) + t[1:]"	Assumes a tuple is a list that happens to use parentheses. Tuples are immutable, so changing one means building a new tuple, or using a list from the start.	Can you change an item of a tuple after it is created?	Tuples are immutable. To change one, build a new tuple or use a list from the start.	Use `t = (9,) + t[1:]`.	Change the middle value of (1, 2, 3) to 5 without a list.
+96	"s = {3, 1, 2}
+print(s[0])  # TypeError"	"s = {3, 1, 2}
+print(sorted(s)[0])"	Believes a set keeps its items in a position that can be indexed. A set is an unordered collection with no positions, so ordered access needs a list or `sorted()`.	Do the items in a set have positions?	Sets are unordered, so they have no indexes. Use sorted() or a list when order matters.	Use `sorted(s)[0]`.	Print the smallest item of a set.
+97	"s = ""abc""
+s = s.reverse()  # AttributeError"	"s = ""abc""
+s = s[::-1]"	Assumes every sequence type shares the same methods. `reverse()` exists only on lists, and a string is reversed by slicing with a negative step.	Does a string have a reverse method?	reverse() exists on lists only. Strings are reversed with the slice [::-1] or reversed().	Use `s = s[::-1]`.	Check whether a word is a palindrome.
+98	"class P:
+    def __init__(self, n):
+        self.n = n
+    def __str__(self):
+        print(self.n)
+print(P(""Ada""))  # TypeError"	"class P:
+    def __init__(self, n):
+        self.n = n
+    def __str__(self):
+        return self.n
+print(P(""Ada""))"	Makes the print-versus-return mistake again, inside a special method. `__str__` must hand back a string for Python to display, not print one itself.	What must __str__ hand back to Python?	__str__ must return a string. Printing inside it shows text but returns None, which Python rejects.	Replace `print(self.n)` with `return self.n`.	Add a __str__ method to a class Car that returns "Car: <brand>".
+99	"class Pt:
+    def __init__(self, x):
+        self.x = x
+print(Pt(1) == Pt(1))  # False"	"class Pt:
+    def __init__(self, x):
+        self.x = x
+    def __eq__(self, other):
+        return self.x == other.x
+print(Pt(1) == Pt(1))"	Assumes two objects with equal contents are equal. By default `==` compares identity, so a class must define `__eq__` to say what equality means for it.	What does == compare by default for two objects of your own class?	By default == compares identity, not contents. A class must define __eq__ to say when two objects are equal.	Add `def __eq__(self, other): return self.x == other.x`.	Make two Money objects equal when their amounts are equal.
+100	"class Dog:
+    def bark(self):
+        print(""woof"")
+d = Dog
+d.bark()  # TypeError"	"class Dog:
+    def bark(self):
+        print(""woof"")
+d = Dog()
+d.bark()"	Confuses the class with an instance of it. Without parentheses `d` is just another name for the class, and a method needing `self` has no object to work on.	What is the difference between Dog and Dog()?	Dog is the class itself. Dog() creates an instance, and only an instance can supply self to a method.	Add parentheses: `d = Dog()`.	Create two separate Dog objects and call bark on both.
+101	"def total(*nums):
+    return sum(nums)
+print(total([1, 2, 3]))  # TypeError"	"def total(*nums):
+    return sum(nums)
+print(total(*[1, 2, 3]))  # 6"	Thinks `*nums` means "give me a list". It collects separate positional arguments into a tuple, so passing one list produces a tuple holding a single list. To spread a list into separate arguments at the call, it must be unpacked with `*`.	How many arguments does total([1, 2, 3]) receive, and what does nums contain inside the function?	*nums gathers each positional argument into a tuple. One list argument becomes a tuple with one item (the list). Putting * before a list at the call site spreads its items out as separate arguments.	Call it as `total(*[1, 2, 3])`.	Write a function show_all(*items) that prints each item, then call it with the list ["a", "b", "c"] without changing the function.
+102	"def show(**opts):
+    print(opts)
+show({""a"": 1})  # TypeError"	"def show(**opts):
+    print(opts)
+show(a=1)  # or: show(**{""a"": 1})"	Believes `**opts` accepts a dict as an ordinary argument. It collects keyword arguments (name=value) into a dict, so a dict passed positionally is rejected. It must be unpacked with `**` at the call.	Is {"a": 1} passed as a keyword argument or as a positional one?	**opts gathers name=value arguments into a dict. A dict given as a plain positional argument has no name, so Python has nowhere to put it. ** at the call spreads a dict into keyword arguments.	Call `show(a=1)` or `show(**{"a": 1})`.	Given settings = {"color": "red", "size": 3}, call a function describe(**kwargs) so that it receives both settings.
+103	"class Calc:
+    def add(a, b):
+        return a + b
+print(Calc().add(2, 3))  # TypeError"	"class Calc:
+    @staticmethod
+    def add(a, b):
+        return a + b
+print(Calc().add(2, 3))  # 5"	Treats a function placed inside a class as if it were an ordinary function. Called on an instance, it receives the instance as an extra first argument. A method that does not need the instance must be marked `@staticmethod` (or take `self`).	When you call Calc().add(2, 3), how many arguments does Python actually pass to add?	Calling a method through an instance passes that instance first, so add receives three arguments. @staticmethod tells Python not to pass the instance.	Add `@staticmethod` on the line above `def add(a, b):`.	Write a class MathTools with a static method double(n) that returns n * 2, and call it using the class name instead of an instance.
+104	"class Circle:
+    def __init__(self, r):
+        self.r = r
+    @property
+    def area(self):
+        return 3.14 * self.r ** 2
+print(Circle(2).area())  # TypeError"	"class Circle:
+    def __init__(self, r):
+        self.r = r
+    @property
+    def area(self):
+        return 3.14 * self.r ** 2
+print(Circle(2).area)  # 12.56"	Thinks every method must be called with parentheses. `@property` turns a method into an attribute that is computed on access, so `.area` already returns the number and the extra `()` tries to call a float.	What does Circle(2).area give back before you add the parentheses?	A property runs its method when you read the attribute and returns the result. Adding () then tries to call that returned float, which fails.	Remove the parentheses: `Circle(2).area`.	Add a property diameter to Circle that returns twice the radius, and print it for Circle(5).
+105	"class Animal:
+    def __init__(self, name):
+        self.name = name
+class Dog(Animal):
+    def __init__(self, name, breed):
+        self.breed = breed
+print(Dog(""Rex"", ""Lab"").name)  # AttributeError"	"class Animal:
+    def __init__(self, name):
+        self.name = name
+class Dog(Animal):
+    def __init__(self, name, breed):
+        super().__init__(name)
+        self.breed = breed
+print(Dog(""Rex"", ""Lab"").name)  # Rex"	Assumes a subclass's `__init__` automatically runs the parent's `__init__` too. Defining `__init__` in the subclass replaces the inherited one, so the parent's setup runs only if the subclass calls `super().__init__()`.	Which __init__ runs when you create Dog("Rex", "Lab"), and does it ever set self.name?	A method defined in the subclass overrides the parent's version. The parent's __init__ is not called unless you call it yourself with super().	Add `super().__init__(name)` as the first line of Dog.__init__.	Write a class Cat that inherits from Animal, adds a color attribute, and still stores the name.
+106	"class Animal:
+    pass
+class Dog(Animal):
+    pass
+d = Dog()
+print(type(d) == Animal)  # False"	"class Animal:
+    pass
+class Dog(Animal):
+    pass
+d = Dog()
+print(isinstance(d, Animal))  # True"	Thinks `type(x) == Class` asks "is x a kind of Class". It asks for the exact class only, so instances of subclasses fail the test. `isinstance` also accepts subclasses.	Is a Dog exactly an Animal, or a kind of Animal? Which one does type(d) == Animal test?	type() returns the exact class and == compares it exactly. isinstance(obj, Class) is True for that class and for any of its subclasses.	Use `isinstance(d, Animal)`.	Write a check that is True when value is an int or a float, using a single isinstance call.
+107	raise "Something went wrong"  # TypeError	raise ValueError("Something went wrong")	Thinks any message can be raised like a note. Only exception objects (instances of classes derived from `BaseException`) can be raised, and the message goes inside one of them as an argument.	What kind of object does `raise` expect after it: a string or an exception?	raise needs an exception class or instance, such as ValueError or RuntimeError. The text is passed to it as an argument.	Write `raise ValueError("Something went wrong")`.	Write a function set_age(age) that raises a ValueError with a clear message when age is negative.
+108	"try:
+    int(""x"")
+except Exception:
+    print(""something failed"")
+except ValueError:
+    print(""not a number"")  # never runs"	"try:
+    int(""x"")
+except ValueError:
+    print(""not a number"")
+except Exception:
+    print(""something failed"")"	Assumes Python picks the best-matching `except` block. It checks them from top to bottom and runs the first one that matches, so a broad `Exception` listed first catches everything and the specific block below it is unreachable.	When int("x") fails, which except line does Python check first, and does it match?	except blocks are tested in order and only the first match runs. ValueError is a kind of Exception, so Exception matches first. Put specific errors before general ones.	Swap the blocks so `except ValueError:` comes before `except Exception:`.	Write a try block around int(text) that handles ValueError with one message and any other exception with a different message.
+109	"try:
+    int(""x"")
+except ValueError as e:
+    pass
+print(e)  # NameError"	"message = """"
+try:
+    int(""x"")
+except ValueError as e:
+    message = str(e)
+print(message)"	Believes the name after `as` stays available after the except block. Python deletes it when the block ends, so the error text must be copied to another variable inside the block.	After the except block finishes, does the name e still exist?	The variable bound by `as e` is removed automatically at the end of the except block. To keep the information, store it in another name inside the block.	Inside the block write `message = str(e)` and use message later.	Catch the error from int("abc") and keep its text in a variable that you can print after the try statement.
+110	"words = list(""hello world"")
+print(words)  # single characters, not words"	"words = ""hello world"".split()
+print(words)  # ['hello', 'world']"	Thinks `list()` splits text into words. Calling list on a string breaks it into individual characters, because a string is a sequence of characters. Splitting into words needs `.split()`.	When you iterate over a string, what does each step give you?	list(s) walks through s one character at a time, spaces included. split() cuts the string at whitespace (or any separator you give) and returns the pieces.	Use `"hello world".split()`.	Turn "red,green,blue" into a list of three colors.
+111	"scores = []
+if all(s >= 50 for s in scores):
+    print(""everyone passed"")  # prints for an empty list"	"scores = []
+if scores and all(s >= 50 for s in scores):
+    print(""everyone passed"")"	Expects `all()` to be False when there is nothing to check. With no items, no item fails the test, so `all([])` is True (a vacuous truth). An emptiness check has to be added separately.	If there are no scores, is there any score that fails the test?	all() is True unless it finds an item that fails. An empty collection has none, so the result is True. Guard against it if "nobody" should not count as success.	Add `scores and` before the all(...) call.	Write a check that prints "all positive" only when nums is non-empty and every number is above 0.
+112	"from collections import defaultdict
+d = defaultdict(int)
+if d[""a""] == 0:
+    print(""a is zero"")
+print(len(d))  # 1, reading created the key"	"from collections import defaultdict
+d = defaultdict(int)
+if d.get(""a"", 0) == 0:
+    print(""a is zero"")
+print(len(d))  # 0"	Thinks reading from a `defaultdict` is harmless. Looking up a missing key with square brackets calls the factory and stores the new entry, so merely checking a value changes the dict. `.get()` and `in` do not.	What happens to the dict when you ask for d["a"] and "a" is not there yet?	A defaultdict creates and stores a default value whenever a missing key is accessed with []. To only look, use `key in d` or `d.get(key)`.	Replace `d["a"]` with `d.get("a", 0)`.	Count how many times each letter appears in "hello" with a defaultdict(int), then check the letter "z" without adding it to the dict.
+113	"items = [""a"", ""b"", ""c""]
+last = items[-0]  # ""a"", not ""c"""	"items = [""a"", ""b"", ""c""]
+last = items[-1]  # ""c"""	Treats the minus sign as "from the end" for any number. Negative indexes count backwards starting at -1, and -0 is just 0, so it gives the first item.	What number is -0 in Python, and which item has that index?	Counting from the end begins at -1 (last item), -2 (second to last), and so on. Since -0 equals 0, items[-0] is the first item.	Use `items[-1]`.	Print the second-to-last item of colors = ["red", "green", "blue", "pink"].
+114	"a, b = input(""Two numbers: "").split()  # user types: 3 4
+print(a + b)  # ""34"""	"a, b = map(int, input(""Two numbers: "").split())  # user types: 3 4
+print(a + b)  # 7"	Assumes pieces taken from text are numbers because they look like digits. `split()` returns strings, so `+` joins them. Each piece must be converted, often with `map(int, ...)`.	What type is each piece that split() returns when the user types 3 4?	split() cuts text into a list of strings, and + on two strings concatenates them. Convert every piece with int() before doing arithmetic.	Use `a, b = map(int, input().split())`.	Read three numbers typed on one line and print their total.
+115	"for i in range(3):
+    print(i)  # prints on 3 separate lines"	"for i in range(3):
+    print(i, end="" "")  # 0 1 2"	Thinks each print continues on the same line. print ends every call with a newline by default, and the `end` argument sets what is written instead.	What does print add after the text each time it runs?	By default print ends every call with a newline character. end= replaces it, for example with a space or an empty string.	Use `print(i, end=" ")`.	Print the numbers 1 to 5 on a single line separated by single spaces.
+116	"scores = []
+best = max(scores)  # ValueError"	"scores = []
+best = max(scores, default=None)"	Assumes the max of nothing is 0 or `None`. max and min need at least one item and raise ValueError on an empty collection, unless a `default=` value is supplied.	Which value should be the biggest of zero values?	There is no sensible maximum of an empty sequence, so Python raises ValueError. The default= argument gives a value to return instead.	Use `max(scores, default=None)`, or check `if scores:` first.	Find the smallest number in nums and give 0 when nums is empty.
+117	"nums = [10, 20, 30]
+nums.pop(20)  # IndexError"	"nums = [10, 20, 30]
+nums.remove(20)  # or: nums.pop(1)"	Mixes up `pop` and `remove`. pop takes a position and returns the removed item, while remove takes a value. The learner treats the pop argument as the value to find.	Does pop expect a value to look for or a position to remove?	pop(i) removes the item at index i. remove(x) removes the first item equal to x. Index 20 does not exist in a three-item list.	Use `nums.remove(20)` or `nums.pop(1)`.	From letters = ["a", "b", "c"], remove "b" one way and remove the last item another way.
+118	"a = {1, 2}
+b = {2, 3}
+print(a + b)  # TypeError"	"a = {1, 2}
+b = {2, 3}
+print(a | b)  # {1, 2, 3}"	Expects `+` to combine any collection. Sets do not support `+`. Their combination is union, written `|` or `.union()`, because set operators describe set logic and not list-style joining.	What should a + b do with the 2 that is in both sets, since a set cannot hold duplicates?	Sets use operators for set logic: | for union, & for intersection, - for difference. + is not defined for them.	Use `a | b`.	Find the items that two sets have in common: set_a = {1, 2, 3} and set_b = {2, 3, 4}.
+119	"names = [""b"", ""a"", ""b"", ""c""]
+unique = list(set(names))  # order is not guaranteed"	"names = [""b"", ""a"", ""b"", ""c""]
+unique = list(dict.fromkeys(names))  # ['b', 'a', 'c']"	Assumes a set remembers insertion order. Sets are unordered, so converting to a set removes duplicates but may scramble the order. Dict keys are unique and keep insertion order (Python 3.7+).	Does a set promise to keep items in the order you added them?	Sets are unordered collections. dict.fromkeys(names) builds a dict whose keys are unique and keep first-seen order, so listing it gives order-preserving de-duplication.	Use `list(dict.fromkeys(names))`.	Remove the duplicates from [3, 1, 3, 2, 1] and keep the first-seen order.
+120	"nums = [3, 1, 2]
+top = sorted(nums).reverse()  # None"	"nums = [3, 1, 2]
+top = sorted(nums, reverse=True)  # [3, 2, 1]"	Chains an in-place method onto a new list and expects the result back. reverse() changes the list and returns `None` (see ID 11), so top ends up as None. sorted accepts `reverse=True` directly.	What does reverse() return after it flips the list?	Methods that modify a list in place return None. Use the reverse=True option of sorted() to get a new descending list in one step.	Write `sorted(nums, reverse=True)`.	Get a new list of words = ["pear", "fig", "apple"] sorted from Z to A.
+121	"words = [""banana"", ""apple"", ""Cherry""]
+print(sorted(words))  # ['Cherry', 'apple', 'banana']"	"words = [""banana"", ""apple"", ""Cherry""]
+print(sorted(words, key=str.lower))  # ['apple', 'banana', 'Cherry']"	Thinks sorting text is alphabetical like a dictionary. Python compares strings by character code, where every capital letter comes before every lowercase letter. A key function can compare lowercase versions instead.	In character codes, does "C" come before or after "a"?	Strings are compared by code point, so uppercase letters sort ahead of lowercase ones. Passing key=str.lower sorts as if everything were lowercase while keeping the original text.	Use `sorted(words, key=str.lower)`.	Sort names = ["bob", "Alice", "carl"] alphabetically, ignoring case.
+122	"import json
+data = json.loads(""data.json"")  # JSONDecodeError"	"import json
+with open(""data.json"") as f:
+    data = json.load(f)"	Confuses `loads` and `load`. `json.loads` parses JSON text that is already in a string, so given a file name it tries to parse the name itself. `json.load` reads from an open file.	What does json.loads receive here: the contents of the file or just its name?	The "s" in loads stands for string. It parses JSON text. To read a file, open it and pass the file object to json.load.	Open the file and call `json.load(f)`.	Parse the text '{"a": 1}' into a dict and print the value of "a".
+123	"import json
+d = {1: ""a""}
+back = json.loads(json.dumps(d))
+print(back[1])  # KeyError"	"import json
+d = {1: ""a""}
+back = json.loads(json.dumps(d))
+print(back[""1""])  # a"	Expects JSON to keep Python key types. JSON object keys are always text, so integer keys come back as strings after a round trip.	What type are the keys of a JSON object?	JSON allows only string keys. dumps turns 1 into "1", and loads gives back the string "1", not the int 1.	Look it up as `back["1"]` (or convert the keys with int()).	Round-trip {2: "b"} through JSON and print the type of its key.
+124	"from datetime import datetime
+d = datetime(""2024-05-01"")  # TypeError"	"from datetime import datetime
+d = datetime.strptime(""2024-05-01"", ""%Y-%m-%d"")"	Thinks a class can read a date straight from text. The datetime constructor takes numbers (year, month, day), so text must be parsed with `strptime` and a format that describes it.	What kind of values does datetime(...) expect to be given?	datetime(2024, 5, 1) takes numeric parts. To read a date written as text, strptime pairs the text with a format string such as %Y-%m-%d.	Use `datetime.strptime("2024-05-01", "%Y-%m-%d")`.	Convert the text "25/12/2024" into a datetime object.
+125	"import random
+items = [""a"", ""b"", ""c""]
+print(items[random.randint(0, len(items))])  # sometimes IndexError"	"import random
+items = [""a"", ""b"", ""c""]
+print(random.choice(items))  # or: items[random.randrange(len(items))]"	Assumes `randint(a, b)` stops before b the way `range` does. randint includes both ends, so it can return len(items), which is one past the last index.	Can randint(0, 3) return 3? Is 3 a valid index of a list with three items?	randint includes both endpoints, whereas range and randrange exclude the stop value. random.choice picks an item directly.	Use `random.choice(items)`.	Pick a random card from a list called cards that has 52 items, without risking an IndexError.
+126	"import random
+cards = [1, 2, 3]
+cards = random.shuffle(cards)  # cards is now None"	"import random
+cards = [1, 2, 3]
+random.shuffle(cards)  # shuffles the list in place"	Expects shuffle to return the shuffled list. It reorders the list in place and returns `None`, like sort (see ID 11), so assigning the result throws the list away.	What does random.shuffle(cards) return?	shuffle changes the existing list and returns None. If you need a new shuffled list, use random.sample(cards, len(cards)).	Call `random.shuffle(cards)` on its own line.	Produce a shuffled copy of a list called deck while keeping deck itself unchanged.
+127	"folder = ""data""
+path = folder + ""file.txt""  # ""datafile.txt"""	"import os
+folder = ""data""
+path = os.path.join(folder, ""file.txt"")  # data/file.txt"	Treats a file path as plain text where separators appear by themselves. Joining with `+` adds no separator, and the separator differs between operating systems. `os.path.join` (or pathlib) adds the right one.	Is there a slash anywhere between "data" and "file.txt" after the + ?	+ only glues text together. os.path.join inserts the correct separator for the operating system.	Use `os.path.join(folder, "file.txt")`.	Build the path to report.csv inside a folder called output without typing a slash yourself.
+128	"i = 0
+while i < 5:
+    if i == 2:
+        continue
+    print(i)
+    i += 1  # stuck forever at i == 2"	"i = 0
+while i < 5:
+    if i == 2:
+        i += 1
+        continue
+    print(i)
+    i += 1"	Forgets that `continue` jumps straight back to the loop condition and skips everything below it. If the update `i += 1` sits below it, the update never runs on that pass, so the loop never ends.	When i is 2, which lines run after continue?	continue skips the rest of the loop body and re-checks the condition. Code that moves the loop forward must run before continue, or on this path as well.	Add `i += 1` before `continue` inside the if block.	Write a while loop that prints the numbers 1 to 6 but skips 4 using continue, without getting stuck.
+129	"class Bag:
+    def __init__(self):
+        self.items = [1, 2]
+print(len(Bag()))  # TypeError"	"class Bag:
+    def __init__(self):
+        self.items = [1, 2]
+    def __len__(self):
+        return len(self.items)
+print(len(Bag()))  # 2"	Assumes `len()` can measure any object that holds items. len(x) works by calling `x.__len__()`, so a custom class must define that method to say what its length means.	How would Python know that the length of a Bag is the number of its items?	Built-in functions call special methods on your object. len() calls __len__, which you must write and which must return an integer.	Add `def __len__(self): return len(self.items)`.	Write a class Playlist with a songs list, and make len(playlist) return the number of songs.
+130	"class Greeter:
+    def hello(self):
+        return ""hi""
+    def twice(self):
+        return hello() * 2  # NameError"	"class Greeter:
+    def hello(self):
+        return ""hi""
+    def twice(self):
+        return self.hello() * 2"	Thinks methods are available as plain names inside the class body. Methods live on the object, so one method calls another through `self.`.	Is hello a plain name inside twice, or something attached to the object?	Inside a method, plain names refer to local or global variables. Methods of the same object are reached through self.	Use `self.hello()`.	Add a method shout() to Greeter that returns the result of hello() in uppercase.
+131	"class Counter:
+    total = 0
+    def add(self):
+        self.total += 1
+a, b = Counter(), Counter()
+a.add()
+a.add()
+print(Counter.total)  # 0, expected 2"	"class Counter:
+    total = 0
+    def add(self):
+        Counter.total += 1
+a, b = Counter(), Counter()
+a.add()
+a.add()
+print(Counter.total)  # 2"	Thinks `self.total += 1` updates the class attribute. It reads the class value but writes a new instance attribute on that one object, leaving the class-level counter unchanged (see ID 44 for shared class state).	After a.add(), where did the new value of total get stored?	Assigning through self creates or updates an instance attribute. To change shared class state, assign through the class name.	Write `Counter.total += 1` in add().	Make a class Ticket that counts how many tickets have been created, shared across all instances.
+132	"pairs = [(""a"", 3), (""b"", 1)]
+print(sorted(pairs, key=pairs[1]))  # TypeError"	"pairs = [(""a"", 3), (""b"", 1)]
+print(sorted(pairs, key=lambda p: p[1]))  # [('b', 1), ('a', 3)]"	Thinks `key` takes a description of what to sort by. It takes a function that is called on each item and returns the value to compare. The learner passes a value instead of a function.	Is pairs[1] a function that Python can call on each item?	key must be callable. Python calls it once per item and sorts by the results. lambda p: p[1] returns the second element of each pair.	Use `key=lambda p: p[1]`.	Sort students = [("Ana", 90), ("Raj", 85)] by score from highest to lowest.
+133	"d1 = {""a"": 1}
+d2 = {""b"": 2}
+merged = d1 + d2  # TypeError"	"d1 = {""a"": 1}
+d2 = {""b"": 2}
+merged = {**d1, **d2}  # or: d1 | d2 (Python 3.9+)"	Expects `+` to combine dicts the way it combines lists. Dicts do not support +. Merging uses unpacking with `**` or the `|` operator (Python 3.9+), where later keys overwrite earlier ones.	If both dicts had the key "a", which value would + have to keep?	Dicts have no + because duplicate keys make the result ambiguous. {**d1, **d2} and d1 | d2 merge them, and d2's values win on clashes.	Use `{**d1, **d2}`.	Merge defaults = {"size": 1, "color": "red"} with custom = {"color": "blue"} so that custom wins.
+134	"d = {""x"": 1}
+del d[""y""]  # KeyError"	"d = {""x"": 1}
+d.pop(""y"", None)"	Assumes deleting a missing key quietly does nothing. `del` raises KeyError just like reading a missing key (see ID 17). `pop` with a default removes the key if present and otherwise returns the default.	What does Python do when you ask for a key that is not in the dict?	del d[key] needs the key to exist. d.pop(key, default) is the safe version.	Use `d.pop("y", None)`.	Remove the key "temp" from the dict settings if it exists, and do nothing otherwise.
+135	"d = {""b"": 2, ""a"": 1}
+d.sort()  # AttributeError"	"d = {""b"": 2, ""a"": 1}
+d = dict(sorted(d.items()))  # {'a': 1, 'b': 2}"	Believes every collection has a `sort()` method. Only lists do. A dict is sorted by sorting its items and building a new dict from them.	Which types have a .sort() method?	sort() is a list method. sorted() works on any iterable and returns a list, so sort d.items() and rebuild the dict from the result.	Use `dict(sorted(d.items()))`.	Create a new dict from scores = {"Ana": 90, "Raj": 85} that is ordered by score, lowest first.
+136	"words = [""apple"", ""pear""]
+if ""app"" in words:
+    print(""found"")  # never prints"	"words = [""apple"", ""pear""]
+if any(""app"" in w for w in words):
+    print(""found"")"	Thinks `in` always means "contained inside". On a list it tests whether an item equals the value exactly. Only on a string does it test for a substring.	Is "app" one of the items in the list, or part of one of them?	For a list, in compares against each whole item. To look inside each string, check every item with any() and a string `in`.	Use `any("app" in w for w in words)`.	Check whether any word in names starts with "A".
+137	print(f"{3.14159:.2}")  # 3.1	print(f"{3.14159:.2f}")  # 3.14	Reads `.2` as "two decimal places". Without the `f` type it means two significant digits. The `f` makes it fixed-point notation with that many digits after the decimal point.	What does the letter f do in a format like .2f?	.2 alone limits significant digits, so 3.14159 becomes 3.1. .2f means fixed-point notation with two digits after the decimal point.	Write `{3.14159:.2f}`.	Print price = 4.5 as "4.50" with an f-string.
+138	"text = ""-5""
+print(text.isdigit())  # False"	"text = ""-5""
+try:
+    n = int(text)
+except ValueError:
+    n = None
+print(n)  # -5"	Thinks `isdigit` is a "can this be a number?" test. It only accepts the characters 0-9, so signs, decimal points and spaces make it False even when `int()` would work.	Is "-" a digit character?	isdigit() checks that every character is a digit. A minus sign breaks it, even though int("-5") works. Trying int() directly and catching ValueError is more reliable.	Use try/except around `int(text)`.	Write a function to_int(text) that returns an int, or None when the text cannot be converted (negative numbers must work).
+139	print(int(3.9))  # 3, expected 4	print(round(3.9))  # 4	Thinks `int()` rounds to the nearest whole number. It truncates toward zero and simply drops the fraction. `round()` gives the nearest integer and `math.ceil()` always goes up.	Does int() look at the .9 when it converts?	int() cuts off the decimal part, so 3.9 becomes 3 and -3.9 becomes -3. Use round() for the nearest integer or math.ceil() to always go up.	Use `round(3.9)`.	Turn 7.2 into 8 with one function and 7.8 into 7 with another.
+140	print(3 and 5)  # 5, expected True	print(3 > 0 and 5 > 0)  # True	Believes `and` and `or` always return True or False. They return one of their operands: `and` gives the first falsy value or otherwise the last one, and `or` gives the first truthy value. Comparisons give real booleans.	What does Python hand back for 3 and 5: a boolean or one of the two values?	and returns the first falsy operand, or the last operand if all are truthy. or returns the first truthy one. Use comparisons or bool() to get True/False.	Write `bool(3 and 5)` or compare each value.	Predict print(0 or "default") and print("" and 5), then explain both results.
+141	"def add_item(items, x):
+    items = items + [x]
+data = [1]
+add_item(data, 2)
+print(data)  # [1]"	"def add_item(items, x):
+    items.append(x)
+data = [1]
+add_item(data, 2)
+print(data)  # [1, 2]"	Mixes up changing an object with rebinding a name. `items + [x]` builds a new list, and assigning it to items only changes the local name. `append` changes the list that the caller also sees.	Does items + [x] change the list that data points to, or create a new one?	Rebinding a parameter never affects the caller (see ID 30). Calling a mutating method such as append changes the shared object, so the caller sees it.	Replace the assignment with `items.append(x)`.	Write a function add_twice(lst, x) that changes the caller's list by appending x two times.
+142	"def evens(n):
+    for i in range(n):
+        if i % 2 == 0:
+            yield i
+print(evens(6))  # <generator object evens at 0x...>"	"def evens(n):
+    for i in range(n):
+        if i % 2 == 0:
+            yield i
+print(list(evens(6)))  # [0, 2, 4]"	Expects a function containing `yield` to return a list. It returns a generator that produces values on demand, so printing it shows the generator object and not the values.	What does calling a function that contains yield give you back right away?	A function with yield returns a generator without running its body yet. Loop over it or convert it with list() to get the values.	Use `list(evens(6))`.	Write a generator squares(n) that yields 0, 1, 4, ... for the numbers below n, and print its results as a list.
+143	"import time
+time.sleep(500)  # waits 500 seconds, not half a second"	"import time
+time.sleep(0.5)"	Assumes durations are given in milliseconds, as in some other languages. `time.sleep` takes seconds, so half a second is 0.5.	In what unit does time.sleep measure its argument?	sleep(n) pauses for n seconds and accepts floats. Divide milliseconds by 1000.	Use `time.sleep(0.5)`.	Pause for 250 milliseconds between two print statements.
+144	"for x in range(0, 1, 0.1):  # TypeError
+    print(x)"	"for i in range(10):
+    print(i / 10)"	Thinks `range` works with decimals. range only accepts integers for start, stop and step. Decimal steps are made by looping over integers and dividing (or by using a library such as NumPy).	What type of numbers does range accept?	range works with ints only. To step by 0.1, count with the integers 0 to 9 and divide each by 10, which also avoids the float errors that build up when adding 0.1 repeatedly (see ID 94).	Use `for i in range(10): print(i / 10)`.	Print 0.5, 1.0, 1.5 and 2.0, one per line, using range.
+145	"a = b = []
+a.append(1)
+print(b)  # [1]"	"a, b = [], []
+a.append(1)
+print(b)  # []"	Reads `a = b = []` as two separate empty lists. The right-hand side is evaluated once, so both names are bound to the same list (aliasing, see ID 7).	How many times is [] evaluated in a = b = []?	Chained assignment evaluates the value once and binds every name to it. For independent lists, create each one separately.	Write `a, b = [], []`.	Create two independent empty dicts called users and admins on a single line.
+146	print(sum(["a", "b"]))  # TypeError	print("".join(["a", "b"]))  # ab	Thinks `sum()` adds anything, including text. sum starts from the number 0 and adds each item to it, so strings fail. Joining text uses `"".join()`.	What value does sum start from, and can you add a string to it?	sum() begins with 0 and adds each item, and 0 + "a" is not allowed. str.join concatenates strings.	Use `"".join(["a", "b"])`.	Combine the list ["Py", "thon"] into the single word "Python".
+147	"with open(""a.txt"") as f:
+    pass
+text = f.read()  # ValueError: I/O operation on closed file"	"with open(""a.txt"") as f:
+    text = f.read()
+print(text)"	Thinks the `with` block only wraps the opening and that the file stays usable afterwards. The file is closed automatically when the block ends, so all reading must happen inside it.	What happens to the file the moment the with block ends?	with closes the file at the end of its indented block. A closed file cannot be read, but a variable you filled inside the block stays available afterwards.	Move `text = f.read()` into the with block.	Read the lines of notes.txt into a list and use that list after the file is closed.
+148	"row = 'Ada,""Pune, India"",30'.split("","")
+print(len(row))  # 4, expected 3"	"import csv
+row = next(csv.reader(['Ada,""Pune, India"",30']))
+print(len(row))  # 3"	Treats a comma-separated line as simple text with commas only between fields. Quoted fields can contain commas themselves, which `split()` cannot tell apart. The `csv` module understands the quoting rules.	How many commas are in this line, and are all of them separators?	split(",") cuts at every comma, including those inside quotes. csv.reader respects quotes and keeps such fields whole.	Use `csv.reader` on the line instead of `split(",")`.	Parse the line 'Raj,"Mumbai, MH",25' into three fields.
+149	print(-2 ** 2)  # -4, expected 4	print((-2) ** 2)  # 4	Reads `-2` as a single number. `**` binds tighter than the unary minus, so Python computes -(2 ** 2). Parentheses force the negative number to be squared.	Which runs first in -2 ** 2: the minus or the power?	Exponentiation has higher precedence than unary minus, so the expression means -(2 ** 2). Parentheses change the order.	Write `(-2) ** 2`.	Predict print(-3 ** 2) and print((-3) ** 2), and explain the difference.
+150	"day = ""Sat""
+if day != ""Sat"" or day != ""Sun"":
+    print(""weekday"")  # prints even on Saturday"	"day = ""Sat""
+if day not in (""Sat"", ""Sun""):
+    print(""weekday"")"	Translates "not Saturday or Sunday" word for word into code. A day can never equal both at once, so at least one `!=` is always True and `or` makes the whole condition always true. "Neither" needs `and` (or `not in`).	If day is "Sat", is day != "Sun" true? What does that make the whole or-condition?	With or, one true side is enough, and every day fails at least one of the two equalities. Use and between the tests, or `day not in (...)`.	Use `day not in ("Sat", "Sun")`.	Write a condition that is True when grade is neither "A" nor "B".
+151	"for (i = 0; i < 3; i++):
+    print(i)  # SyntaxError"	"for i in range(3):
+    print(i)"	Carries over the C-style `for (init; test; step)` loop. Python's `for` does not count with a start/test/step triple; it walks through the items of an iterable, and `range()` supplies the counting numbers.	Does a Python for loop count with a counter you set up yourself, or go through the items of a collection?	Python's `for` takes one variable and an iterable, written `for name in iterable:`. There is no separate start, test and step part; `range(3)` produces 0, 1, 2 for you.	Replace the parenthesised part with `for i in range(3):`.	Write a for loop that prints the numbers 1 to 5, one per line.
+152	"x = 7
+if x > 5 {
+    print(""big"")
+}  # SyntaxError"	"x = 7
+if x > 5:
+    print(""big"")"	Expects curly braces to mark the body of an `if`, as in C, Java or JavaScript. Python ends the header line with a colon and uses indentation to show which lines belong to the block.	What character ends the `if` line in Python, and what shows which lines are inside the block?	A Python block starts with a colon and is defined by indentation. Braces are used for dictionaries and sets, not for blocks.	Remove the braces, add `:` after `x > 5`, and keep `print("big")` indented.	Write an if/else that prints "even" or "odd" for a variable n.
+153	"age = 15
+if age > 12 && age < 20:
+    print(""teen"")  # SyntaxError"	"age = 15
+if age > 12 and age < 20:
+    print(""teen"")"	Uses the `&&` operator from C-style languages. Python spells its logical operators as words: `and`, `or`, `not`. (A single `&` exists, but it is a bitwise operator.)	Which word does Python use to say "both conditions must be true"?	Python's logical operators are the words `and`, `or` and `not`. The symbols `&&`, `||` and `!` are not valid.	Replace `&&` with `and`.	Write an if statement that prints "pleasant" when temp is above 15 and below 30.
+154	"done = false
+result = null  # NameError"	"done = False
+result = None"	Writes the boolean and empty-value constants in lowercase, as in JavaScript or Java. Python is case-sensitive, so `false` and `null` look like undefined variable names. The built-in constants are `True`, `False` and `None`.	Does Python treat `false` and `False` as the same word?	Python is case-sensitive. Its built-in constants are `True`, `False` and `None`, each with a capital first letter. Python has no `null`; `None` plays that role.	Change the lines to `done = False` and `result = None`.	Set a variable is_open to the boolean false and a variable winner to Python's "no value" constant.
+155	"int x = 5
+print(x)  # SyntaxError"	"x = 5
+print(x)"	Thinks a variable must be declared with a type before use, as in Java or C. In Python a variable is just a name attached to a value by assignment; the type belongs to the value, not the name.	How does Python find out that x holds a number, without being told "int"?	Python variables are not declared. Assigning with `=` creates the name, and the value carries its own type, which you can check with `type(x)`.	Delete `int` so the line reads `x = 5`.	Create variables for a name ("Ada") and an age (30) without any type words, then print `type()` of each.
+156	"items = [4, 5, 6]
+print(items.length)  # AttributeError"	"items = [4, 5, 6]
+print(len(items))"	Expects a `.length` property (JavaScript) or `.size()` method (Java) on the list. In Python, size comes from the built-in function `len()`, which works on lists, strings, tuples, sets and dicts.	Is length something a list carries as an attribute, or something you ask a built-in function for?	Python uses the built-in `len(obj)` instead of an attribute. The same function works for every collection type.	Replace `items.length` with `len(items)`.	Print how many characters are in the string "python" and how many items are in the list [1, 2, 3].
+157	"stack = []
+stack.push(7)  # AttributeError"	"stack = []
+stack.append(7)"	Uses `push`, the method name from JavaScript and stack textbooks. Python lists add an item to the end with `append()`; there is no `push` method on lists.	What is the name of the list method that adds one item to the end?	Python lists have `append()` to add at the end and `pop()` to remove from the end, which together behave like a stack.	Change `stack.push(7)` to `stack.append(7)`.	Start with an empty list, use append to push 1, 2 and 3, then use pop to take the top item off.
+158	"if ""cat"".contains(""a""):  # AttributeError
+    print(""yes"")"	"if ""a"" in ""cat"":
+    print(""yes"")"	Looks for a `contains` method as in Java, or `includes` in JavaScript. Python tests membership with the `in` operator, which reads "item in container" and works on strings, lists, sets and dict keys.	Which keyword does Python use to ask whether something is inside a string or collection?	Membership uses the `in` operator: `needle in haystack`. Strings do not have a `contains` method.	Rewrite the condition as `"a" in "cat"`.	Write an if that prints "has e" when the string word contains the letter "e".
+159	"x = -3
+if x > 0:
+    print(""positive"")
+else if x < 0:
+    print(""negative"")  # SyntaxError"	"x = -3
+if x > 0:
+    print(""positive"")
+elif x < 0:
+    print(""negative"")"	Writes the extra branch as two words, `else if`, as in C or Java. Python has a single keyword, `elif`, for a further condition; after `else` it expects only a colon.	After the word `else`, what does Python expect to see next?	`else` takes no condition and is followed directly by a colon. A further condition is written with the one-word keyword `elif`.	Replace `else if` with `elif`.	Write if/elif/else code that prints "positive", "negative" or "zero" for a number n.
+160	"x = 4
+label = x > 0 ? ""positive"" : ""negative""  # SyntaxError"	"x = 4
+label = ""positive"" if x > 0 else ""negative"""	Uses the `condition ? a : b` ternary of C-family languages. Python's conditional expression puts the value first and reads like a sentence: `a if condition else b`. The `?` is not an operator in Python.	How would you say "positive if x is bigger than 0, otherwise negative" in plain English word order?	Python writes a one-line choice as `value_if_true if condition else value_if_false`. It uses the words `if` and `else` instead of `?` and `:`.	Write `label = "positive" if x > 0 else "negative"`.	Use one line to set status to "adult" if age is 18 or more, otherwise "minor".
+161	"// store the starting score
+score = 0  # SyntaxError"	"# store the starting score
+score = 0"	Writes comments with `//` from C, Java and JavaScript. In Python `//` is the floor-division operator, so a line that starts with it is a broken expression. Python comments start with `#`.	What symbol starts a comment in Python, and what does `//` mean in Python?	A Python comment begins with `#` and runs to the end of the line. `//` is floor division, so `//` at the start of a line has nothing to divide.	Replace `//` with `#`.	Add a one-line comment above `total = price * qty` that says what the line calculates.
+162	total = 2(3 + 4)  # TypeError: 'int' object is not callable	total = 2 * (3 + 4)	Treats a number followed by parentheses as multiplication, as in written maths. In Python, parentheses after a value mean "call it", and numbers are not callable, so every multiplication needs an explicit `*`.	In Python, what does putting parentheses right after a value ask Python to do?	`name(...)` is a function call. Python never infers multiplication, so `2(3 + 4)` tries to call the number 2 as if it were a function.	Insert `*` between `2` and `(3 + 4)`.	Write Python for the maths expression 3x(x + 1) when x = 2 and print the result.
+163	total-score = 10  # SyntaxError	total_score = 10	Treats the hyphen as a legal character in a name, as in CSS or file names. In Python a hyphen is the minus operator, so `total-score` reads as "total minus score" and cannot be assigned to. Names use letters, digits and underscores only.	How does Python read the `-` between `total` and `score`?	Variable names can contain letters, digits and underscores, but not hyphens, and cannot start with a digit. A hyphen means subtraction, so the line tries to assign to an expression.	Use an underscore: `total_score`.	Which of these are valid Python variable names: `my_age`, `my-age`, `2nd_place`, `place2`? Fix the invalid ones.
+164	"name = ""Ada""
+print(Name)  # NameError"	"name = ""Ada""
+print(name)"	Assumes capital letters do not matter in names. Python is case-sensitive, so `name` and `Name` are two different identifiers, and the second one was never assigned.	Are `name` and `Name` the same variable to Python?	Python treats upper and lower case as different characters in names. A NameError means Python has never seen that exact spelling.	Change `Name` to `name` in the print call.	The code `Score = 10` followed by `print(score)` fails. Explain why and fix it in two different ways.
+165	print(Hello world)  # SyntaxError	print("Hello world")	Forgets that text must be wrapped in quotes. Without quotes, Python reads `Hello` and `world` as variable names, and two names side by side are not a valid expression.	How does Python tell the difference between a word that is text and a word that is a variable name?	Text values (strings) are enclosed in matching single or double quotes. Anything without quotes is treated as a name, keyword or number.	Put quotes around the text: `print("Hello world")`.	Store the text Pune in a variable called city, then print the word city as text and the value of city.
+166	msg = 'It's raining'  # SyntaxError	msg = "It's raining"	Does not realise that the apostrophe ends the string. Python closes the string at the second `'`, so `s raining'` is left over as broken code. A string needs a different outer quote (or an escape) when it contains the same quote character.	Where does Python think the string ends in `'It's raining'`?	A string ends at the first matching quote. To include an apostrophe, wrap the text in double quotes or escape it with a backslash.	Use double quotes on the outside: `"It's raining"`, or write `'It\'s raining'`.	Write a string that contains: She said "hi" and it's late. Then print it.
+167	"x = 1
+    y = 2  # IndentationError"	"x = 1
+y = 2"	Treats indentation as free-form spacing. In Python the leading spaces are part of the syntax: an indented line must belong to a block opened by a line ending in a colon, so an extra indent after a plain statement is an error.	What kind of line is allowed to be followed by a more indented line in Python?	Indentation starts a block only after a line ending in a colon (`if`, `for`, `def`, ...). Otherwise, statements at the same level must line up exactly.	Remove the four spaces before `y = 2`.	Write a short if block whose body has two statements, indented by the same amount.
+168	"greet()
+def greet():
+    print(""hi"")  # NameError"	"def greet():
+    print(""hi"")
+greet()"	Assumes Python reads the whole file first and knows every function, so call order does not matter. Python runs top to bottom: `def` is a statement that creates the function when it executes, so the name does not exist before that line.	At the moment `greet()` runs on the first line, has Python already executed the `def` line?	A `def` creates the function name when execution reaches it. Calling the function earlier in the file raises NameError, even though the definition appears later.	Move the call `greet()` below the `def` block.	Write a function shout(text) that prints text in capitals, and call it twice with different words in the right order.
+169	"def greet(name):
+    print(""Hi"", name)
+greet()  # TypeError"	"def greet(name):
+    print(""Hi"", name)
+greet(""Ada"")"	Believes a parameter is just a label that can be left out at the call. A parameter with no default is required, so the caller must supply a matching argument or Python raises a TypeError about the missing positional argument.	When greet() runs, what value should name have?	Parameters are placeholders that get their values from the call. Without a default, each parameter needs an argument, otherwise Python reports a missing positional argument.	Pass a value, as in `greet("Ada")`, or give the parameter a default such as `name="friend"`.	Change greet so it can be called both as greet() and as greet("Ada").
+170	pip install requests  # SyntaxError	"# In the terminal, not in the .py file:
+#   pip install requests
+import requests"	Mixes up terminal commands with Python code. `pip` is a program run from the command line that downloads packages; a Python file may only contain Python statements, such as `import`, after the package is installed.	Where do you type commands like `pip`, and what does Python code say once the package is installed?	`pip install` is a shell command, not a Python statement. Run it in the terminal, then use `import requests` in your script.	Remove the pip line from the script, run it in the terminal instead, and write `import requests` in the file.	Write the terminal command that installs the package numpy, then the Python line that imports it as np.
+171	name = raw_input("Name: ")  # NameError	name = input("Name: ")	Follows an old Python 2 tutorial. `raw_input` was renamed `input` in Python 3, so the old name no longer exists. Other Python 2 leftovers that cause errors include `xrange` and `print` without parentheses.	Which Python version does your tutorial target, and which one are you running?	Python 3 has only `input()`, which returns text. `raw_input()` belonged to Python 2 and raises NameError today.	Rename `raw_input` to `input`.	Ask the user for a city with a Python 3 prompt and print "Welcome to <city>".
+172	"d = {""a"": 1}
+if d.has_key(""a""):  # AttributeError
+    print(""found"")"	"d = {""a"": 1}
+if ""a"" in d:
+    print(""found"")"	Uses the Python 2 `dict.has_key()` method from an outdated tutorial. It was removed in Python 3, where key membership is tested with `in`, the same operator used for lists, sets and strings.	Which operator can you use to ask whether a key is present in a dict?	`dict.has_key` was removed in Python 3. Use `key in d` to test for a key; it works the same way as for lists and sets.	Replace `d.has_key("a")` with `"a" in d`.	Given stock = {"pen": 4}, print "in stock" when "pen" is a key and "sold out" otherwise.
+173	print(10 / 2)  # 5.0, expected 5	print(10 // 2)  # 5	Assumes `/` gives a whole number when the division is exact. In Python 3, `/` always returns a float, even for `10 / 2`. Floor division `//` is what returns an int when both operands are ints.	What type does Python report for `type(10 / 2)`?	Python 3 uses `/` for true division, which always produces a float (5.0). The `//` operator divides and rounds down, giving an int when both inputs are ints.	Use `10 // 2`, or wrap the result with `int(10 / 2)`.	Print how many full 7-day weeks there are in 30 days, as an integer.
+174	print(-1 % 5)  # 4, expected -1	"import math
+print(math.fmod(-1, 5))  # -1.0"	Expects the remainder to keep the sign of the first number, as `%` does in C or Java. In Python the result of `%` takes the sign of the divisor, so that `a == (a // b) * b + a % b` always holds with floor division.	What is -1 // 5 in Python, and what remainder must go with it so the parts add back up to -1?	Python's `%` pairs with floor division. Since -1 // 5 is -1, the remainder must be 4 (because -1 * 5 + 4 = -1). The result takes the sign of the right-hand number.	For a C-style remainder use `math.fmod(-1, 5)`. Otherwise accept 4; it is handy for wrapping around.	Predict -7 % 3 and 7 % -3, then check both in Python.
+175	print(2 ** 3 ** 2)  # 512, expected 64	print((2 ** 3) ** 2)  # 64	Assumes operators of the same level are always evaluated left to right. Exponentiation is the exception: `**` groups from the right, so Python computes 2 ** (3 ** 2) = 2 ** 9.	Which `**` does Python do first in `2 ** 3 ** 2`, the left one or the right one?	Most operators group left to right, but `**` groups right to left. Parentheses make the intended order explicit.	Add parentheses: `(2 ** 3) ** 2`.	Predict `2 ** 2 ** 3`, then add parentheses to compute (2 squared) cubed.
+176	"price = 3.10
+print(""Price:"", round(price, 2))  # Price: 3.1, expected 3.10"	"price = 3.10
+print(f""Price: {price:.2f}"")  # Price: 3.10"	Thinks `round()` controls how a number looks. `round(price, 2)` limits the value to two decimals, but a float stores no trailing zero, so print shows 3.1. Showing a fixed number of decimals is a formatting job, done with a format spec such as `:.2f`.	Is the float 3.1 any different from 3.10 inside the computer, and what decides how many digits get printed?	A float has no trailing zeros to keep; `round` only rounds the value. To always show two decimals, format the number into text with `:.2f`.	Use an f-string with `{price:.2f}`.	Print the total 12.5 as money with exactly two decimals, like "Total: 12.50".
+177	"x = True
+if isinstance(x, int):
+    print(""number"")  # prints for True too"	"x = True
+if isinstance(x, int) and not isinstance(x, bool):
+    print(""number"")"	Believes True and False are a separate type from numbers. In Python `bool` is a subclass of `int` (True == 1, False == 0), so `isinstance(True, int)` is True.	What do you get from `True + True`, and what does that suggest about its type?	`bool` inherits from `int`, so booleans pass an `isinstance(x, int)` check. To exclude them, test for bool as well, or compare `type(x) is int`.	Add `and not isinstance(x, bool)`, or use `type(x) is int`.	Write a function is_number(v) that returns True for ints and floats but False for booleans.
+178	n = int("1,000")  # ValueError	n = int("1,000".replace(",", ""))  # 1000	Expects `int()` to understand thousands separators the way people read numbers. `int()` accepts only digits with an optional sign and surrounding spaces, so a comma makes the text invalid.	Which characters in "1,000" are digits, and which one is not?	`int()` converts text that looks like a plain whole number. Any other character, such as a comma, makes it raise ValueError, so clean the text first.	Remove the commas before converting, using `.replace(",", "")`.	Convert the text "2,500,000" to an integer and add 1 to it.
+179	"nums = [-5, -2, -9]
+biggest = 0
+for n in nums:
+    if n > biggest:
+        biggest = n
+print(biggest)  # 0, expected -2"	"nums = [-5, -2, -9]
+biggest = nums[0]
+for n in nums:
+    if n > biggest:
+        biggest = n
+print(biggest)  # -2"	Starts the running maximum at 0 as if every list contained positive numbers. When all values are negative, none beats the starting value, so the answer is 0, which is not even in the list.	If every number in the list is below 0, can any of them be greater than `biggest`?	The starting value of a running maximum must come from the data (or be negative infinity), never an arbitrary constant. Otherwise the start value itself can win.	Start with `biggest = nums[0]` (or just use `max(nums)`).	Write a loop that finds the smallest value in [8, 3, 12] without using min(), choosing a safe starting value.
+180	print("a  b".split(" "))  # ['a', '', 'b']	print("a  b".split())  # ['a', 'b']	Assumes `split(" ")` and `split()` do the same thing. With an explicit separator, every single space is a cut, so two spaces in a row create an empty string. With no argument, Python splits on any run of whitespace and drops empty pieces.	How many spaces sit between a and b, and how many cuts does `split(" ")` make there?	`split(sep)` cuts at every occurrence of sep, producing empty strings for adjacent separators. `split()` with no argument treats runs of whitespace as one separator and ignores the ends.	Call `.split()` without an argument.	Split the text "  red   green blue " into exactly three words.
+181	"name = ""text.txt"".strip("".txt"")
+print(name)  # ""e"", expected ""text"""	"name = ""text.txt"".removesuffix("".txt"")  # Python 3.9+
+print(name)  # ""text"""	Reads the argument of `strip()` as a substring to remove. It is actually a set of characters: Python trims any of them from both ends until it meets one not in the set, which here eats the t, x and dot and leaves "e".	Does `strip(".txt")` remove the exact text ".txt", or any of the characters `.`, `t` and `x`?	`strip(chars)` treats chars as a set of individual characters to trim from both ends. To remove a specific ending, use `removesuffix` (Python 3.9+) or slicing.	Use `"text.txt".removesuffix(".txt")`.	Remove the .pdf ending from "mapped.pdf" so that "mapped" remains.
+182	"s = ""hello""
+i = s.find(""z"")  # -1
+print(s[i])  # ""o"", expected a ""not found"" message"	"s = ""hello""
+i = s.find(""z"")
+if i != -1:
+    print(s[i])
+else:
+    print(""not found"")"	Forgets that `find()` returns -1 when nothing matches, and that -1 is a valid index (the last character). The program carries on with a bogus result instead of failing.	What does `s.find("z")` return when there is no "z", and what does `s[-1]` give you?	`find` signals "not found" with -1, but negative indexes count from the end, so `s[-1]` quietly returns the last character. Check for -1 before using the result as an index.	Test `if i != -1:` before indexing, or use `"z" in s`.	Write code that prints the position of "@" in an email string, or "no @ found" if it is missing.
+183	"words = ""hi there"".split()
+print(words.upper())  # AttributeError"	"words = ""hi there"".split()
+print([w.upper() for w in words])  # ['HI', 'THERE']"	Thinks `split()` still gives back a string. It returns a list of strings, and string methods such as `upper()` belong to each string, not to the list.	What type does `"hi there".split()` return, and which type owns the `upper()` method?	`split()` produces a list. A list has no `upper()`; call it on each string, for example in a list comprehension, or uppercase the string before splitting.	Use `[w.upper() for w in words]`, or `"hi there".upper().split()`.	Turn "red green blue" into the list ["RED", "GREEN", "BLUE"].
+184	print("{} is {} years old".format("Ada"))  # IndexError	print("{} is {} years old".format("Ada", 30))	Counts the `{}` placeholders loosely. Each empty `{}` consumes one argument in order, so two placeholders need two values; with only one value Python runs out of arguments and raises IndexError.	How many `{}` are in the string, and how many values are given to `format`?	Each `{}` placeholder is filled by the next argument. The placeholder count and the argument count must match.	Pass a second value: `.format("Ada", 30)`.	Using format or an f-string, print "Raj scored 88 in Maths" from the variables name, score and subject.
+185	"word = ""racecar""
+print(word == reversed(word))  # False"	"word = ""racecar""
+print(word == word[::-1])  # True"	Expects `reversed()` to return a reversed string. It returns a lazy reverse iterator object, which is never equal to a string, so the palindrome test is always False.	What does `print(reversed("abc"))` show: a string or something else?	`reversed()` gives an iterator object, not a new string. Reverse a string with the slice `[::-1]` or with `"".join(reversed(word))`.	Compare with `word[::-1]`.	Write is_palindrome(s) that ignores upper/lower case, and test it on "Level".
+186	"scores = []
+scores[0] = 90  # IndexError"	"scores = []
+scores.append(90)"	Assumes assigning to an index creates the item, like setting a key in a dict. A list only lets you assign to positions that already exist; to grow it you append, insert, or start from a list of the right size.	How many positions does an empty list have, and is index 0 one of them?	Index assignment replaces an existing item; it never extends a list, so an empty list has no valid index. Use `append()` to add items or build the list with placeholders first.	Use `scores.append(90)`, or start with `scores = [0] * 3` if you need fixed positions.	Build a list of the squares of 1 to 5 starting from an empty list.
+187	"names = [""Ada""]
+names.extend(""Bob"")
+print(names)  # ['Ada', 'B', 'o', 'b']"	"names = [""Ada""]
+names.append(""Bob"")
+print(names)  # ['Ada', 'Bob']"	Treats `extend()` as "add another item". `extend` takes an iterable and adds each of its elements, and a string is an iterable of characters, so every letter becomes a separate item.	When `extend` receives "Bob", what does it loop over?	`append(x)` adds x as one item. `extend(iterable)` adds every element of the iterable, and iterating a string yields single characters.	Use `append("Bob")` for one item, or `extend(["Bob", "Raj"])` for several.	Add "Raj" and "Mia" to the names list in a single call and print the list.
+188	"nums = [10, 30]
+nums.insert(20, 1)
+print(nums)  # [10, 30, 1], expected [10, 20, 30]"	"nums = [10, 30]
+nums.insert(1, 20)
+print(nums)  # [10, 20, 30]"	Swaps the arguments of `insert(index, value)`. The position comes first, then the value. Because an index beyond the end simply appends, the call does not fail; it silently puts the wrong thing in the wrong place.	In `nums.insert(20, 1)`, which number is the position and which is the value?	`list.insert(index, value)` takes the index first. An index larger than the length does not raise an error; the value goes at the end.	Swap the arguments: `nums.insert(1, 20)`.	Put 0 at the start of [5, 6, 7], then put 99 between 5 and 6.
+189	"rows = []
+row = []
+for i in range(3):
+    row.append(i)
+    rows.append(row)
+print(rows)  # [[0, 1, 2], [0, 1, 2], [0, 1, 2]]"	"rows = []
+row = []
+for i in range(3):
+    row.append(i)
+    rows.append(row.copy())
+print(rows)  # [[0], [0, 1], [0, 1, 2]]"	Thinks `rows.append(row)` stores the list's current contents. It stores a reference to the same list object, so later changes to `row` show up in every position. A snapshot needs `row.copy()`.	How many different list objects exist in this program: one or three?	Lists are mutable objects and `append` stores a reference, not a copy. All three entries point at the same list, so they always look identical.	Append a snapshot, `rows.append(row.copy())`, or create a fresh `row = []` inside the loop if each row should be independent.	Build [[1], [1, 2], [1, 2, 3]] by growing one list in a loop and appending a snapshot each time.
+190	"a = [4, 5, 6]
+total = 0
+for i in range(1, len(a)):
+    total += a[i]
+print(total)  # 11, expected 15"	"a = [4, 5, 6]
+total = 0
+for i in range(len(a)):
+    total += a[i]
+print(total)  # 15"	Starts the index at 1 because people count from 1. List indexes start at 0, so `range(1, len(a))` silently skips the first item.	Which index holds the first item, and does `range(1, len(a))` include it?	Indexes begin at 0. `range(start, stop)` begins at start, so starting at 1 leaves out `a[0]`. Use `range(len(a))`, or loop over the items directly.	Change to `range(len(a))`, or write `for x in a: total += x`.	Print every item of a list with a position number that starts at 1, without skipping any item.
+191	"a = [1, 2, 3]
+for i in range(len(a)):
+    if a[i] > a[i + 1]:
+        print(""not sorted"")  # IndexError"	"a = [1, 2, 3]
+for i in range(len(a) - 1):
+    if a[i] > a[i + 1]:
+        print(""not sorted"")"	Compares each item with the next one but lets the loop run on to the last index, where there is no next item. A pair-based loop needs one fewer iteration than the list has items (an off-by-one error).	What is `i + 1` on the last pass, and does `a[i + 1]` exist?	With n items there are only n - 1 neighbouring pairs. The last index has nothing after it, so the loop must stop one step earlier.	Use `range(len(a) - 1)`.	Write a loop that checks whether a list of numbers is in ascending order and prints True or False.
+192	"names = [""Ada"", ""Raj"", ""Mia""]
+ages = [30, 25]
+print(list(zip(names, ages)))  # [('Ada', 30), ('Raj', 25)] -- Mia is silently dropped"	"from itertools import zip_longest
+names = [""Ada"", ""Raj"", ""Mia""]
+ages = [30, 25]
+print(list(zip_longest(names, ages)))  # [('Ada', 30), ('Raj', 25), ('Mia', None)]"	Assumes `zip` pairs every item and complains if the lists differ in length. By default it stops at the shortest input and drops the leftover items without any warning.	How many pairs can be made when one list has 3 items and the other has 2, and what happens to the third name?	`zip` stops when the shortest iterable runs out, and the extra items are ignored silently. `zip_longest` pads the gap, and `strict=True` (Python 3.10+) raises an error on unequal lengths.	Use `zip_longest(names, ages)` to keep Mia, or `zip(names, ages, strict=True)` to be told about the mismatch.	Pair ["a", "b", "c"] with [1, 2] so that "c" is kept with the value 0.
+193	"queue = [""first"", ""second"", ""third""]
+print(queue.pop())  # ""third"", expected ""first"""	"queue = [""first"", ""second"", ""third""]
+print(queue.pop(0))  # ""first"""	Assumes `pop()` removes the oldest item, as in a queue. With no argument it removes the last item, which makes a list behave like a stack (last in, first out). A queue needs the item at index 0.	Which end of the list does `pop()` take from if you give it no argument?	`pop()` removes the last item (stack behaviour); `pop(0)` removes the first (queue behaviour). For long queues, `collections.deque` with `popleft()` is faster than popping from the front of a list.	Use `queue.pop(0)`, or `deque.popleft()`.	Process the list ["a", "b", "c"] in first-in-first-out order, printing each item as it is removed.
+194	"scores = {""Raj"": 75, ""Ada"": 90}
+print(sorted(scores))  # ['Ada', 'Raj'] -- sorted by name, scores lost"	"scores = {""Raj"": 75, ""Ada"": 90}
+print(sorted(scores.items(), key=lambda kv: kv[1]))  # [('Raj', 75), ('Ada', 90)]"	Thinks `sorted()` of a dict sorts the whole dict by its values. Iterating a dict yields only its keys, so `sorted(d)` returns a list of keys in alphabetical order, with the values left behind.	When you loop over a dict directly, what do you get: keys, values or pairs?	`sorted(d)` sorts the keys only. To order by value, sort the `(key, value)` pairs from `d.items()` and tell `key=` to look at the value.	Use `sorted(scores.items(), key=lambda kv: kv[1])`.	Print the names from {"Raj": 75, "Ada": 90, "Mia": 82} from highest to lowest score.
+195	"scores = [90, None, 70]
+print(max(scores))  # TypeError"	"scores = [90, None, 70]
+print(max(s for s in scores if s is not None))  # 90"	Assumes missing data is quietly skipped by `max`. `None` cannot be compared with numbers using `>` or `<`, so as soon as `max` meets it, Python raises TypeError.	Can Python decide whether `None` is bigger or smaller than 70?	Comparison operators need values of compatible types. `None` means "no value", not zero, so remove or replace it before using `max`, `min` or `sorted`.	Filter the list first: `s for s in scores if s is not None`.	Compute the average of [80, None, 60, None, 100] ignoring the missing values.
+196	"name = ""Ada""
+for name in [""Raj"", ""Mia""]:
+    print(name)
+print(name)  # ""Mia"", expected ""Ada"""	"name = ""Ada""
+for person in [""Raj"", ""Mia""]:
+    print(person)
+print(name)  # ""Ada"""	Believes a `for` loop variable lives only inside the loop. Python has no block scope: the loop variable is an ordinary variable in the enclosing scope, so reusing an existing name overwrites it, and it keeps its last value after the loop.	After the loop ends, does the name `name` still point to "Ada"?	In Python only functions, classes and modules create new scopes, not loops. The loop variable is assigned on every pass, replacing any earlier value of that name.	Use a different loop variable such as `person`.	This code should print 10 at the end. Find the bug and fix it: total = 10; for total in [1, 2, 3]: print(total); then print(total).
+197	"hits = {}
+hits[""a""] = hits.get(""a"") + 1  # TypeError"	"hits = {}
+hits[""a""] = hits.get(""a"", 0) + 1"	Forgets that `get()` returns `None` for a missing key unless you pass a second argument. Adding 1 to `None` raises TypeError, so the counting idiom needs a default value of 0.	What does `hits.get("a")` return when "a" is not in the dict yet?	`d.get(key)` gives None for a missing key, and None cannot be added to a number. `d.get(key, default)` returns the default instead.	Use `hits.get("a", 0) + 1`.	Count how many times each letter appears in "banana" using get with a default.
+198	"d = dict.fromkeys([""a"", ""b""], [])
+d[""a""].append(1)
+print(d[""b""])  # [1]"	"d = {k: [] for k in [""a"", ""b""]}
+d[""a""].append(1)
+print(d[""b""])  # []"	Expects `fromkeys` to create a separate empty list for each key. It evaluates the value once and gives every key the same object, so changing one list changes them all.	How many list objects were created by the single `[]` in `fromkeys(keys, [])`?	The value argument is evaluated once and shared by every key. For separate mutable values, create one per key with a dict comprehension.	Use `{k: [] for k in ["a", "b"]}`.	Make a dict mapping "x", "y" and "z" to independent empty lists, append 1 to x only, and show that y is still empty.
+199	"d = {}
+d[""x""][""y""] = 1  # KeyError: 'x'"	"d = {}
+d.setdefault(""x"", {})[""y""] = 1
+print(d)  # {'x': {'y': 1}}"	Expects the inner dictionary to appear automatically when the outer key is first used. Python evaluates `d["x"]` first, which fails because "x" does not exist yet; inner containers must be created explicitly.	Which lookup runs first in `d["x"]["y"] = 1`, and does that key exist yet?	Python never creates missing levels on its own. First create `d["x"]` (for example as `{}`), then set the inner key. `setdefault` or `defaultdict(dict)` can do this for you.	Use `d.setdefault("x", {})["y"] = 1`, or write `d["x"] = {}` first.	Starting from an empty dict, store the marks of "Ada" in Maths (90) and Science (85) in a nested dict.
+200	"d = {""a"": 1, ""a"": 2}
+print(d, len(d))  # {'a': 2} 1, expected two entries"	"pairs = [(""a"", 1), (""a"", 2)]
+print(len(pairs))  # 2"	Assumes a dict can hold the same key twice. Keys are unique; a repeated key just overwrites the earlier value, and Python gives no error for it in a dict literal.	If you look up d["a"], which of the two values should come back?	A dict maps each key to exactly one value. Duplicates replace the earlier value silently. To keep several values per key, store a list as the value, or use a list of pairs.	Store `{"a": [1, 2]}` or use a list of tuples.	Record two phone numbers for "Ada" so that both are kept and can be printed.
+201	"s = {1, 2, 3}
+s.remove(9)  # KeyError"	"s = {1, 2, 3}
+s.discard(9)"	Assumes `remove` quietly ignores an element that is not there. On sets, `remove()` raises KeyError for a missing item; `discard()` is the version that does nothing when the item is absent.	What should happen if you remove something that was never in the set?	`set.remove(x)` insists that x exists. `set.discard(x)` removes x if present and does nothing otherwise.	Use `s.discard(9)`, or check `if 9 in s:` first.	Remove "b" from {"a", "b"} twice in a row without causing an error.
+202	"def fact(n):
+    if n == 0:
+        return 1
+    else:
+        n * fact(n - 1)
+print(fact(3))  # TypeError"	"def fact(n):
+    if n == 0:
+        return 1
+    else:
+        return n * fact(n - 1)
+print(fact(3))  # 6"	Computes the recursive result but forgets to return it. The expression `n * fact(n - 1)` is evaluated and thrown away, so the function returns `None` for that branch, and the caller then fails when it multiplies by `None`.	What does the else branch hand back to its caller?	A function returns None unless a `return` statement runs. Every path, including the recursive one, must return its result.	Add `return` before `n * fact(n - 1)`.	Write a recursive function total(n) that returns 1 + 2 + ... + n.
+203	"def sign(x):
+    if x > 0:
+        return ""pos""
+    elif x < 0:
+        return ""neg""
+print(sign(0))  # None"	"def sign(x):
+    if x > 0:
+        return ""pos""
+    elif x < 0:
+        return ""neg""
+    else:
+        return ""zero""
+print(sign(0))  # zero"	Assumes every input is covered by one of the branches. When no `return` runs, the function ends silently and returns `None`, which then flows into the rest of the program.	Which branch handles x = 0?	Functions return None by default when execution falls off the end. Make sure each possible input reaches a return, usually with a final `else` or return line.	Add `else: return "zero"`.	Write grade(score) that returns "pass" for 40 or more and "fail" otherwise, covering every possible score.
+204	"x = 3
+x == 5
+print(x)  # 3, expected 5"	"x = 3
+x = 5
+print(x)  # 5"	Mixes up comparison and assignment in the opposite direction from `if x = 5`: uses `==` expecting it to set the value. A comparison just produces True or False, which is thrown away when written as a statement, so x never changes.	What does `x == 5` produce, and where does that result go?	`==` asks a question and returns a boolean; `=` stores a value. A bare comparison line does nothing visible.	Use `x = 5`.	Set score to 0, then add 10 to it with an assignment (not a comparison), and print it.
+205	"def power(base, exp):
+    return base ** exp
+print(power(exp=2, 3))  # SyntaxError"	"def power(base, exp):
+    return base ** exp
+print(power(3, exp=2))  # 9"	Believes arguments in a call can be mixed in any order. Python requires all positional arguments first, then keyword arguments, because after a keyword it cannot tell which parameter a bare value belongs to.	In `power(exp=2, 3)`, which parameter does the bare 3 belong to?	In a call, positional arguments must come before keyword arguments. Keyword arguments (name=value) can then appear in any order.	Reorder to `power(3, exp=2)`, or use two keywords: `power(base=3, exp=2)`.	Call power so that base is 2 and exp is 5 using only keyword arguments, written with exp first.
+206	"def total():
+    return 10
+total = total()
+print(total())  # TypeError: 'int' object is not callable"	"def total():
+    return 10
+result = total()
+print(total())  # 10"	Does not realise that a function name is an ordinary variable. Assigning `total = total()` rebinds the name to the number 10, so the function is gone and the later `total()` tries to call an int.	After `total = total()` runs, what does the name `total` refer to?	`def` just binds a name to a function object, and assignment can rebind that name to anything. Store results under a different name to keep the function usable.	Assign to a new name: `result = total()`.	Call a function area(w, h) twice and keep both results without losing the function.
+207	"def double(n: int) -> int:
+    return n * 2
+print(double(""ab""))  # ""abab"", no error"	"def double(n: int) -> int:
+    if not isinstance(n, int):
+        raise TypeError(""n must be an int"")
+    return n * 2"	Thinks type hints are checked when the code runs. They are documentation for people and tools such as mypy; Python itself ignores them, so a string passes straight through and `*` repeats it.	What did Python do with "ab" even though the hint says int?	Annotations such as `n: int` are not enforced at run time. If you need a guarantee, check with `isinstance` and raise an error, or run a static type checker.	Add an `isinstance` check and raise `TypeError`.	Write add(a: int, b: int) that raises TypeError when either argument is not an int.
+208	"score = 40
+if score >= 50:
+    msg = ""pass""
+print(msg)  # NameError"	"score = 40
+msg = ""fail""
+if score >= 50:
+    msg = ""pass""
+print(msg)  # fail"	Assumes a variable created inside an `if` always exists afterwards. If the branch does not run, the assignment never happens and the name is undefined (NameError, or UnboundLocalError inside a function). Every path needs to give the variable a value.	When score is 40, does the line `msg = "pass"` ever run?	Names are created only when an assignment executes. Give the variable a default before the `if`, or add an `else` that assigns it.	Set `msg = "fail"` first, or add `else: msg = "fail"`.	Write code that sets label to "even" or "odd" for a number n so that label always exists.
+209	"def log(func):
+    def wrapper():
+        print(""calling"")
+        func()
+    return wrapper
+
+@log
+def get():
+    return 5
+print(get())  # prints ""calling"", then None"	"def log(func):
+    def wrapper():
+        print(""calling"")
+        return func()
+    return wrapper
+
+@log
+def get():
+    return 5
+print(get())  # prints ""calling"", then 5"	Calls the wrapped function inside the wrapper but throws its return value away. The decorated name now refers to `wrapper`, so whatever `wrapper` returns is all the caller sees, and without a `return` that is `None`.	After decoration, is `get` the original function or `wrapper`?	A decorator replaces the function with the wrapper. The wrapper must return the result of the original call, or the value is lost.	Change `func()` to `return func()`.	Write a decorator shout that makes the string returned by any function uppercase.
+210	"for row in [[1, 2], [2, 3]]:
+    for v in row:
+        if v == 2:
+            print(""found"")
+            break  # leaves only the inner loop
+# prints ""found"" twice"	"found = False
+for row in [[1, 2], [2, 3]]:
+    for v in row:
+        if v == 2:
+            print(""found"")
+            found = True
+            break
+    if found:
+        break
+# prints ""found"" once"	Expects `break` to end every loop that surrounds it. `break` exits only the innermost loop, so the outer loop moves on to its next item.	Which loop does `break` leave: the one it is directly inside, or all of them?	`break` affects only the nearest enclosing loop. To stop an outer loop too, set a flag and break again, or move the search into a function and `return`.	Set `found = True` before the inner break and add `if found: break` in the outer loop.	Write a function that returns the first negative number it finds in a list of lists, or None.
+211	"for n in [1, -2, 3]:
+    if n < 0:
+        pass
+    print(n)  # also prints -2"	"for n in [1, -2, 3]:
+    if n < 0:
+        continue
+    print(n)"	Treats `pass` as "skip this item". `pass` is only a do-nothing placeholder; execution carries on with the next line. Skipping the rest of the loop body for one item needs `continue`.	When n is -2, what does the pass line do, and which line runs next?	`pass` does nothing and lets the loop body carry on. `continue` jumps straight to the next iteration, skipping the rest of the body.	Replace `pass` with `continue`.	Print only the odd numbers from 1 to 9 using continue.
+212	"nums = [1, 2]
+for n in nums:
+    nums.append(n * 2)  # never ends"	"nums = [1, 2]
+for n in nums[:]:
+    nums.append(n * 2)
+print(nums)  # [1, 2, 2, 4]"	Thinks the loop works from a frozen copy of the list. A list iterator walks the live list by position, so each append lengthens the list and gives the loop another item, forever.	Does the list get longer or shorter each time through the loop, and when does the loop run out of items?	Iterating over a list while adding to it keeps extending the loop. Iterate over a copy (`nums[:]` or `list(nums)`) or collect the new items in a separate list.	Loop over `nums[:]`.	Double every number in a list by building a new list instead of changing the one you loop over.
+213	"x = -1
+assert(x > 0, ""x must be positive"")  # passes silently"	"x = -1
+assert x > 0, ""x must be positive""  # AssertionError"	Writes `assert` like a function call. The parentheses create a two-item tuple, and a non-empty tuple is always truthy, so the assertion can never fail (Python even prints a SyntaxWarning).	What is `(x > 0, "x must be positive")` as a single value, and is it true or false?	`assert` is a statement: `assert condition, message`. Wrapping both parts in parentheses makes a tuple, which is truthy no matter what the condition is.	Remove the parentheses.	Write a function that asserts its input is not negative, with a helpful message, then call it with -3.
+214	"try:
+    int(""x"")
+except ValueError as e:
+    print(e.message)  # AttributeError"	"try:
+    int(""x"")
+except ValueError as e:
+    print(e)"	Expects exceptions to expose a `.message` attribute, as in other languages or Python 2. In Python 3 the text of an exception comes from converting it to a string, `str(e)` (which `print(e)` does), or from `e.args`.	How could you display the error object itself and see what text it carries?	Python 3 exception objects have no `message` attribute. `print(e)` or `str(e)` shows the message, and `e.args` holds the raw arguments.	Use `print(e)`.	Catch a ZeroDivisionError from 1 / 0 and print a message that includes the error text.
+215	"class Dog:
+    def _init_(self, name):
+        self.name = name
+d = Dog(""Rex"")  # TypeError"	"class Dog:
+    def __init__(self, name):
+        self.name = name
+d = Dog(""Rex"")"	Types the constructor with single underscores. Python only calls the special method named `__init__` (two underscores on each side); a method with any other name is an ordinary method, so the object is created with no arguments and the extra "Rex" is rejected.	Count the underscores on each side of init. How many does Python's constructor have?	Special ("dunder") methods have exactly two leading and two trailing underscores. A misspelled one is silently treated as a normal method, so `Dog("Rex")` runs the default constructor, which takes no arguments.	Rename `_init_` to `__init__`.	Write a class Book whose constructor stores title and author, then create one and print both.
+216	"class P:
+    def __init__(self, age):
+        self.age = age
+people = [P(30), P(20)]
+sorted(people)  # TypeError"	"class P:
+    def __init__(self, age):
+        self.age = age
+people = [P(30), P(20)]
+people = sorted(people, key=lambda p: p.age)"	Assumes Python knows how to order any objects. Instances of your own classes have no built-in ordering, so `<` is undefined for them. Tell `sorted` what to compare with `key=`, or define `__lt__` on the class.	How would Python decide whether P(30) is "less than" P(20)?	Sorting needs a way to compare items. For your own classes, give `key=` a function that returns a sortable value, or implement `__lt__`.	Use `sorted(people, key=lambda p: p.age)`.	Given objects that each have a .price attribute, print them from cheapest to most expensive.
+217	"with open(""a.txt"") as f:
+    for line in f:
+        print(line)  # a blank line appears after every line"	"with open(""a.txt"") as f:
+    for line in f:
+        print(line, end="""")"	Does not notice that each line read from a file still ends with `\n`, and `print` adds a second newline. The extra blank lines come from two newlines per line, not from the file containing empty lines.	What character does each line from the file end with, and what does print add on its own?	Iterating over a file gives lines with their trailing newline, and `print` appends another one. Strip the line or tell print not to add a newline.	Use `print(line.strip())` or `print(line, end="")`.	Print each line of a file with its line number in front, without extra blank lines.
+218	"with open(""n.txt"", ""w"") as f:
+    f.write(5)  # TypeError"	"with open(""n.txt"", ""w"") as f:
+    f.write(str(5))"	Assumes `write` converts any value to text like `print` does. A file's `write()` accepts only strings (or bytes in binary mode), so numbers must be converted first.	What type does `write` accept, and what type is 5?	`print` converts its arguments to text for you; `write` does not. Convert with `str()` or an f-string.	Use `f.write(str(5))` or `f.write(f"{5}")`.	Write the numbers 1 to 3 to a file, one per line.
+219	"with open(""names.txt"", ""w"") as f:
+    f.write(""Ada"")
+    f.write(""Raj"")  # file contains ""AdaRaj"""	"with open(""names.txt"", ""w"") as f:
+    f.write(""Ada\n"")
+    f.write(""Raj\n"")"	Expects `write()` to end each call with a new line, as `print` does. `write` outputs exactly the characters given, so without `\n` the pieces run together on one line.	What does `print` add at the end that `write` does not?	`print` adds a newline automatically; `write` writes only what you pass. Include `\n` yourself where each line should end.	Write `"Ada\n"` and `"Raj\n"`.	Save the list ["a", "b", "c"] to a file with one item per line.
+220	"with open(""data.csv"") as f:  # FileNotFoundError when run from another folder
+    text = f.read()"	"from pathlib import Path
+path = Path(__file__).parent / ""data.csv""
+with open(path) as f:
+    text = f.read()"	Assumes a relative path is searched next to the script. It is resolved against the current working directory of the process, which depends on where the program was launched (terminal, IDE, double-click), not on where the .py file lives.	Is "data.csv" looked for next to your script, or in the folder you were in when you started Python?	Relative paths are relative to the working directory. Build an absolute path from `__file__`, or change into the right folder first. `os.getcwd()` shows where Python is actually looking.	Use `Path(__file__).parent / "data.csv"`.	Print the current working directory, then open a file that sits in the same folder as your script.
+221	"import json
+data = {""a"": 1}
+with open(""d.json"", ""w"") as f:
+    json.dump(data)  # TypeError"	"import json
+data = {""a"": 1}
+with open(""d.json"", ""w"") as f:
+    json.dump(data, f)"	Mixes up `dump` and `dumps`. `json.dumps(obj)` returns a string, while `json.dump(obj, file)` writes to an open file and therefore needs the file object as its second argument. The `s` stands for string.	Where should the JSON go, and which argument tells `json.dump` that?	`dump(obj, fp)` writes to a file; `dumps(obj)` returns a str. Likewise `load(fp)` reads from a file and `loads(text)` parses a string.	Pass the file: `json.dump(data, f)`.	Save {"name": "Ada"} to a file, then read it back with the matching load function.
+222	"import json
+data = json.loads(""{'a': 1}"")  # JSONDecodeError"	"import json
+data = json.loads('{""a"": 1}')"	Treats JSON as identical to Python dict syntax. JSON is a separate text format that requires double quotes around keys and strings; single-quoted text is not valid JSON even though it is a valid Python dict literal.	Is JSON the same language as a Python dict literal, or a separate format with its own rules?	JSON strings and keys need double quotes, and `true`, `false` and `null` are lowercase. To produce valid JSON from a dict, let `json.dumps` write it.	Use double quotes inside: `'{"a": 1}'`, or generate the text with `json.dumps({"a": 1})`.	Convert the dict {"ok": True, "n": None} to JSON text and print it, then note how True and None changed.
+223	"import datetime
+print(datetime.now())  # AttributeError"	"from datetime import datetime
+print(datetime.now())"	Confuses the module `datetime` with the class of the same name inside it. `import datetime` gives the module, which has no `now()`; the function lives on the class `datetime.datetime`.	After `import datetime`, is `datetime` the module or the class inside it?	The `datetime` module contains a class that is also called `datetime`. Either import the class (`from datetime import datetime`) or call `datetime.datetime.now()`.	Use `from datetime import datetime`.	Print today's date only (year-month-day) using the datetime module.
+224	"grid = [[1, 2, 3], [4, 5, 6]]  # 2 rows, 3 columns
+print(grid[2][1])  # IndexError"	"grid = [[1, 2, 3], [4, 5, 6]]
+print(grid[1][2])  # 6"	Reads the first index as the x (column) position, like coordinates on a graph. In a list of lists, the first index picks the row (the inner list) and the second index picks the item within that row.	Which list does the first `[ ]` select, and how many of those lists are there?	`grid[row][col]`: the first index chooses which inner list, the second chooses an item in it. With 2 rows, only 0 and 1 are valid first indexes.	Use `grid[1][2]` to get the item in the second row, third column.	Build the list of the first column of grid, which should be [1, 4].
+225	"x = 5
+if x == True:
+    print(""truthy"")  # never prints"	"x = 5
+if x:
+    print(""truthy"")"	Assumes any "true-looking" value equals `True`. Truthiness is a rule used by `if`, but `==` compares actual values: `5 == True` is False because only 1 equals True. Test the condition directly.	Is `5 == True` true? What number does True equal?	`if x:` asks whether x is truthy (non-zero, non-empty). `x == True` asks whether x equals 1. Prefer `if x:`.	Write `if x:`.	Predict `bool(5)`, `5 == True` and `1 == True`, then run them to check.
+226	"result = None
+if result == None:
+    print(""no result"")"	"result = None
+if result is None:
+    print(""no result"")"	Treats None like any other value to compare with `==`. None is a single shared object, so the intended test is identity (`is`), and `==` can be fooled by classes that define their own `__eq__`.	How many None objects exist in a running program, and which operator asks "is this the very same object"?	None is one shared object. `is None` checks identity and cannot be overridden, while `== None` calls `__eq__`, which a class is free to redefine.	Change `result == None` to `result is None`.	Write a condition that prints "missing" only when a variable named data is None, and not when it is 0 or an empty list.
+227	"text = ""abc""
+if text.isdigit:
+    print(""all digits"")  # always prints"	"text = ""abc""
+if text.isdigit():
+    print(""all digits"")"	Thinks naming a method runs it. Without parentheses `text.isdigit` is the method object itself, which is always truthy, so the condition never tests the string.	What does `print(text.isdigit)` show, and is that the answer to the question or the tool that would answer it?	A method name on its own is just a value (a bound method). Parentheses call it. A function object is always truthy, so the `if` passes whatever the text is.	Add parentheses: `text.isdigit()`.	Predict the output of `print(bool("abc".isupper))` and `print(bool("abc".isupper()))`, then run both.
+228	"colors = [""red"" ""green"", ""blue""]
+print(len(colors))  # 2, expected 3"	"colors = [""red"", ""green"", ""blue""]
+print(len(colors))"	Does not know that neighbouring string literals are joined automatically. A missing comma causes no error: `"red" "green"` silently becomes the single string `"redgreen"`.	How many items does the list have, and what does print(colors) show?	Python glues adjacent string literals together before the program runs, so with no comma you get one merged string instead of two items.	Put a comma between "red" and "green".	Explain why `names = ["Ada", "Raj" "Mia"]` has two items, then write the version with three.
+229	"price = 9.99,
+print(price + 1)  # TypeError"	"price = 9.99
+print(price + 1)"	Treats a trailing comma as harmless punctuation. The comma is what builds a tuple, so `price = 9.99,` stores `(9.99,)`, not a number.	Print `type(price)`. What did Python actually store?	In Python the comma, not the parentheses, creates a tuple. A stray comma after a value turns it into a one-item tuple.	Delete the comma after 9.99.	Write `a = 4` and `b = 4,` on separate lines and use type() to show how their types differ.
+230	room = 007  # SyntaxError	"room = 7
+print(f""{room:03}"")  # 007"	Believes leading zeros are harmless padding, as in phone numbers or room labels. Python 3 rejects an integer like `007`; to keep the zeros the value has to be text or be formatted.	Is 007 a quantity you will calculate with, or a label you will only display?	Integer literals cannot start with 0 unless every digit is 0. For padded labels, store text such as "007" or format the number with `f"{7:03}"`.	Write `room = 7`, and use `f"{room:03}"` when you need to show it as 007.	Print the number 7 padded with zeros to three digits (007).
+231	class = "Math"  # SyntaxError	course = "Math"	Thinks any word can name a variable. Words such as `class`, `def`, `for`, `in` and `lambda` are reserved keywords with fixed meanings, unlike built-in names such as `list`, which can be overwritten.	What job does the word class already do in Python?	Keywords are reserved by the language and cannot be used as names. Pick a different word, such as `course` or `class_name`.	Rename the variable, for example `course = "Math"`.	Write valid assignments that store 3 in variables you would otherwise be tempted to call `for` and `import`.
+232	double = lambda x: return x * 2  # SyntaxError	double = lambda x: x * 2	Thinks a lambda body is a normal function body. A lambda holds a single expression whose value is returned automatically, so a `return` statement is not allowed inside it.	Where does a lambda expect an expression, and is `return x * 2` an expression or a statement?	`lambda args: expression` returns the value of the expression on its own. Statements such as `return`, assignments or `if` blocks cannot appear in it.	Remove the word `return`.	Write a lambda named square that returns n squared, then rewrite it as an equivalent def.
+233	"nums = []
+if nums[0] == 1 and len(nums) > 0:  # IndexError
+    print(""starts with 1"")"	"nums = []
+if len(nums) > 0 and nums[0] == 1:
+    print(""starts with 1"")"	Thinks both sides of `and` are always evaluated, so their order does not matter. Python goes left to right and stops at the first False, which means a safety check must come before the risky check it protects.	Which side of `and` runs first, and what happens to it when the list is empty?	`and` short-circuits: if the left side is False the right side never runs. Put the guard (is the list non-empty?) on the left so it protects the index on the right.	Swap the two conditions so `len(nums) > 0` comes first.	Write a condition that is safe on an empty list and True only when the first item of nums is greater than 10.
+234	print("-" * 2.5)  # TypeError	"width = 2.5
+print(""-"" * int(width))  # --"	Assumes repetition works like multiplication for any number. `text * n` repeats the text a whole number of times, so a float count raises TypeError, even 2.0.	Can you write a piece of text "two and a half times"?	Sequence repetition needs an integer. Floats are rejected even when they hold a whole value. Convert with `int()` or `round()`, or compute the count with `//`.	Use a whole number such as `"-" * 2`, or convert first: `"-" * int(width)`.	Given width = 7.0, print a line made of that many "=" characters.
+235	"nums = [1, 2, 3]
+for n in nums:
+    n = n * 2
+print(nums)  # [1, 2, 3], expected [2, 4, 6]"	"nums = [1, 2, 3]
+for i in range(len(nums)):
+    nums[i] = nums[i] * 2
+print(nums)  # [2, 4, 6]"	Believes the loop variable is the list item itself. `n` is a separate name bound to each value in turn, so reassigning it changes `n` and leaves the list untouched.	After `n = n * 2`, which name holds the new number: n, or the slot in the list?	A `for` loop hands each item to the loop variable by assignment. Rebinding that name does not write back. To change a list, assign to a position (`nums[i] = ...`) or build a new list.	Use `for i in range(len(nums)): nums[i] = nums[i] * 2`, or `nums = [n * 2 for n in nums]`.	Turn ["a", "b"] into ["A", "B"] in the same list object, without creating a new list.
+236	"x = 0
+while x != 10:
+    x += 3  # 0, 3, 6, 9, 12 ... never equals 10, loops forever"	"x = 0
+while x < 10:
+    x += 3"	Assumes a counter will land exactly on the stopping value. When the step jumps over it, an `!=` test never becomes False and the loop runs forever; a range test such as `<` still ends.	List the values x takes. Does it ever equal 10?	Stop conditions that wait for an exact value break when the step does not divide evenly. A range test (`<` or `<=`) still ends once the value passes the limit.	Change `x != 10` to `x < 10`.	Write a loop that starts at 1, doubles each time and stops once the value is above 100, and explain why `!= 100` would fail.
+237	"nums = range(5)
+print(nums)  # range(0, 5), expected [0, 1, 2, 3, 4]"	"nums = range(5)
+print(list(nums))"	Thinks `range` builds a list of numbers. It makes a lazy range object that produces numbers on demand, so printing it shows a description, not the values.	What does `type(range(5))` say?	`range` stores only start, stop and step and creates the values as you loop. Wrap it in `list()` when you need to see or keep all of them.	Use `print(list(range(5)))`.	Print the even numbers from 0 to 10 as a list, using range.
+238	"nums = [1, 2, 3]
+print(map(str, nums))  # <map object at 0x...>"	"nums = [1, 2, 3]
+print(list(map(str, nums)))  # ['1', '2', '3']"	Expects `map` to hand back a finished list. It returns a lazy iterator, so printing it shows the object, and nothing is computed until something loops over it.	Does print show the converted items, or something that describes the map?	`map` returns an iterator that computes each result only when asked. Convert it with `list()` (or use a comprehension) to get all the values at once.	Use `print(list(map(str, nums)))`.	Use map to turn ["1", "2", "3"] into the list [1, 2, 3].
+239	"nums = [5, -1, 8]
+positives = filter(lambda n: n > 0, nums)
+print(len(positives))  # TypeError"	"nums = [5, -1, 8]
+positives = list(filter(lambda n: n > 0, nums))
+print(len(positives))  # 2"	Treats the result of `filter` as a list. It is an iterator with no length, because it decides which items to keep only as they are requested.	Can an iterator know how many items it will produce before it has produced them?	`filter` returns a lazy iterator, which can be looped over but does not support `len()` or indexing. Convert it with `list()` first.	Wrap it: `positives = list(filter(...))`.	Count how many words in ["a", "bb", "ccc"] are longer than one letter, using filter.
+240	"squares = map(lambda n: n * n, [1, 2, 3])
+print(list(squares))  # [1, 4, 9]
+print(list(squares))  # [], expected [1, 4, 9]"	"squares = list(map(lambda n: n * n, [1, 2, 3]))
+print(squares)
+print(squares)"	Thinks an iterator can be read as many times as you like. It is a one-way stream: once its values have been consumed, it is empty.	After the first list(squares), where is the iterator's position?	Iterators remember where they are and never rewind. If you need the values more than once, store them in a list.	Make `squares` a list with `list(map(...))`.	Explain why `g = (n for n in range(5))`, then `total = sum(g)`, then `count = len(list(g))` gives count 0, and fix it.
+241	"nums = [1, 2, 3]
+print(next(nums))  # TypeError: 'list' object is not an iterator"	"nums = [1, 2, 3]
+it = iter(nums)
+print(next(it))  # 1"	Mixes up an iterable with an iterator. A list can be looped over (iterable), but `next()` needs an iterator, which keeps track of a position; `iter()` creates one.	What would a list need to remember in order to know which item comes "next"?	An iterable can produce an iterator. An iterator has a current position and supports `next()`. `iter(nums)` turns the first into the second.	Create `it = iter(nums)` and call `next(it)`.	Use iter and next to print the first two items of ["a", "b", "c"], one call at a time.
+242	"names = [""Ada"", ""Raj""]
+for i, name in names:  # ValueError: too many values to unpack
+    print(i, name)"	"names = [""Ada"", ""Raj""]
+for i, name in enumerate(names):
+    print(i, name)"	Expects a loop to supply the position alongside the item automatically. A plain loop yields only items, so Python tries to unpack each string into two names; `enumerate` supplies the pairs.	What does one pass of the plain loop hand you: a single value or a pair?	Looping over a list gives items only. `enumerate(names)` yields (index, item) pairs, which can be unpacked into two variables.	Loop over `enumerate(names)`.	Print "1. Ada" and "2. Raj", numbering from 1 by using the start argument of enumerate.
+243	"keys = [""a"", ""b""]
+values = [1, 2]
+d = {k: v for k in keys for v in values}
+print(d)  # {'a': 2, 'b': 2}, expected {'a': 1, 'b': 2}"	"keys = [""a"", ""b""]
+values = [1, 2]
+d = {k: v for k, v in zip(keys, values)}
+print(d)"	Reads two `for` clauses as "go through both lists together". They are nested loops, so every key meets every value, and later pairs overwrite earlier ones.	How many (k, v) combinations does the double for produce, and what happens when a key appears twice?	Chained for clauses nest like loops inside loops. To walk two lists in step, pair them with `zip`.	Use `zip(keys, values)`: `{k: v for k, v in zip(keys, values)}`.	Build {"x": 10, "y": 20} from two separate lists, one of keys and one of values.
+244	"nums = [1, 2, 3]
+result = [print(n) for n in nums]
+print(result)  # [None, None, None]"	"nums = [1, 2, 3]
+for n in nums:
+    print(n)"	Uses a comprehension as a compact loop for actions. A comprehension exists to build a list of values; with `print` it builds a useless list of None, and a plain `for` loop states the intent.	What value does print(n) return, and what is the list collecting?	Comprehensions collect the value of an expression for each item. When you only want side effects such as printing, use a `for` loop.	Replace the comprehension with a `for` loop.	Print each word of ["hi", "yo"] in capitals, and decide whether a loop or a comprehension suits the job.
+245	"prices = [10, 20, 30]
+doubled = prices * 2
+print(doubled)  # [10, 20, 30, 10, 20, 30], expected [20, 40, 60]"	"prices = [10, 20, 30]
+doubled = [p * 2 for p in prices]
+print(doubled)"	Expects operators to work on every item at once, as in maths or NumPy. For a list, `*` repeats the whole list; arithmetic on each item needs a loop or comprehension.	Does `*` act on the numbers inside the list, or on the list as a whole?	Operators on lists work on the list as an object: `+` joins two lists, `*` repeats one. To do arithmetic on each element, loop or use a list comprehension.	Use `[p * 2 for p in prices]`.	Add 5 to every item of [1, 2, 3] to get [6, 7, 8].
+246	"a = [1, 2, 3]
+b = [3, 2, 1]
+if a == b:
+    print(""same items"")  # never prints"	"a = [1, 2, 3]
+b = [3, 2, 1]
+if sorted(a) == sorted(b):
+    print(""same items"")"	Thinks list `==` asks "do they hold the same items?". Lists are ordered, so equality means the same items in the same positions; to ignore order, compare sorted copies.	Is the sequence [1, 2, 3] the same as the sequence [3, 2, 1]?	Order is part of a list's identity. Compare `sorted(a) == sorted(b)` to ignore order but keep duplicates, or use sets when duplicates do not matter.	Compare sorted copies: `sorted(a) == sorted(b)`.	Check whether "listen" and "silent" are anagrams of each other, using sorted.
+247	"sentence = "" "".join(""hello world"")
+print(sentence)  # h e l l o   w o r l d"	"sentence = "" "".join([""hello"", ""world""])
+print(sentence)  # hello world"	Forgets that a string is itself a sequence of characters. `join` accepts any iterable, so a string is treated as a list of one-letter strings and the separator goes between letters.	What does list("hello") give, and what is join gluing together here?	`join` takes an iterable of strings. A string iterates over its characters, so you must pass a list of words instead.	Pass a list of words: `" ".join(["hello", "world"])`.	Join the words of "to be or not".split() with hyphens, then predict what `"-".join("tbn")` produces.
+248	"nums = [1, 2, 3]
+print(nums, sep="", "")  # [1, 2, 3], expected 1, 2, 3"	"nums = [1, 2, 3]
+print(*nums, sep="", "")  # 1, 2, 3"	Thinks `sep` formats the contents of one list. `sep` goes between separate arguments of `print`; a list is a single argument, so there is nothing to separate. The `*` unpacks the items into separate arguments.	How many arguments did print receive?	`print(a, b, c, sep=", ")` puts the separator between arguments. `print(*nums)` unpacks the list into separate arguments.	Use `print(*nums, sep=", ")`.	Print the list [1, 2, 3] as 1-2-3 using the sep argument of print.
+249	"name = ""Mary Ann""
+if name.isalpha():
+    print(""valid name"")  # never prints"	"name = ""Mary Ann""
+if name.replace("" "", """").isalpha():
+    print(""valid name"")"	Reads `isalpha()` as "looks like ordinary text". It is True only when every character is a letter, so spaces, hyphens, digits and apostrophes make it False.	Which character in "Mary Ann" is not a letter?	`isalpha()` checks every character. Remove or allow the extra characters first, or test each character in a loop.	Remove the spaces before testing: `name.replace(" ", "").isalpha()`.	Accept names made only of letters, spaces and hyphens, so that "Anne-Marie Lee" passes.
+250	print("hELLO wORLD".capitalize())  # Hello world, expected Hello World	print("hELLO wORLD".title())  # Hello World	Thinks `capitalize()` capitalizes every word and leaves the rest alone. It upper-cases only the first character of the whole string and lower-cases all the others.	How many capital letters are in the output, and what happened to the W?	`capitalize()` treats the string as one unit. `title()` capitalizes each word, although it has quirks with apostrophes.	Use `.title()`.	Predict "python IS fun".capitalize() and "python IS fun".title(), then run both.
+251	print("it's a dog's life".title())  # It'S A Dog'S Life	"import string
+print(string.capwords(""it's a dog's life""))  # It's A Dog's Life"	Assumes `title()` knows where English words begin. It treats any letter that follows a non-letter as the start of a new word, so letters after apostrophes get capitalized.	Which characters does title() treat as the end of a word?	`title()` starts a new word after every non-letter character. `string.capwords()` splits on whitespace instead, which handles apostrophes.	Use `string.capwords(text)`.	Capitalize "o'neil's pub" so that it becomes "O'neil's Pub".
+252	print("aaaa".count("aa"))  # 2, expected 3	"text = ""aaaa""
+print(sum(text[i:i + 2] == ""aa"" for i in range(len(text) - 1)))  # 3"	Assumes `count` finds every possible match. It counts non-overlapping occurrences, scanning left to right and jumping past each match it finds.	After matching the first "aa" at positions 0 and 1, where does the search resume?	`str.count` moves past each match, so overlapping matches are missed. To count overlaps, test every starting position yourself.	Loop over the start indexes and compare each slice with the target text.	Count how many times "aba" occurs in "ababa", including overlapping occurrences.
+253	"filename = ""img1.png""
+if filename.startswith([""img"", ""pic""]):  # TypeError
+    print(""image"")"	"filename = ""img1.png""
+if filename.startswith((""img"", ""pic"")):
+    print(""image"")"	Believes any collection of options is accepted. `startswith` (and `endswith`) take either one string or a tuple of strings, not a list.	What type does the error message say startswith received, and what type does it ask for?	These methods accept a str or a tuple of str. Turn the list into a tuple by using parentheses.	Change the square brackets to parentheses: `("img", "pic")`.	Check whether "report.pdf" ends with ".pdf" or ".docx".
+254	"code = ""123""
+if 1 in code:  # TypeError
+    print(""found"")"	"code = ""123""
+if ""1"" in code:
+    print(""found"")"	Thinks `in` on text can look for a number. Searching inside a string works only with substrings, which must themselves be strings.	What type is the value on the left of in, and what is code a collection of?	A string contains characters, so `in` needs text on the left. Write "1" or convert with `str(1)`.	Use `"1" in code`, or `str(1) in code`.	Check whether the digit 7 appears in the number 3172, without writing a loop.
+255	print(ord("ab"))  # TypeError	print([ord(c) for c in "ab"])  # [97, 98]	Expects `ord` to handle text of any length. It converts exactly one character to its code number, so a longer string has to be handled one character at a time.	How many characters does ord accept, according to the error message?	`ord(ch)` maps one character to one integer. For a whole string, apply it to each character.	Use a comprehension: `[ord(c) for c in "ab"]`.	Shift each letter of "abc" one step forward in the alphabet to get "bcd", using ord and chr.
+256	path = r"C:\data\"  # SyntaxError	path = "C:\\data\\"	Thinks a raw string switches backslashes off completely. In `r"..."` a backslash still keeps the next quote from ending the string, so a raw string cannot end with a single backslash.	Does the final quote close the string, or is it being escaped?	Raw strings keep backslashes as they are, but a backslash before a quote still stops that quote from closing the string. Use doubled backslashes, or build paths with `os.path.join` or pathlib.	Write "C:\\data\\", or drop the trailing backslash and use `os.path.join`.	Build the path for a file "a.txt" inside the folder r"C:\data" without typing a backslash yourself.
+257	letters = "hello".split("")  # ValueError: empty separator	"letters = list(""hello"")
+print(letters)  # ['h', 'e', 'l', 'l', 'o']"	Expects an empty separator to cut between every character. `split` needs something to look for, and empty text matches everywhere, so Python refuses.	Where exactly would Python cut if the separator is nothing at all?	`split(sep)` cuts at each occurrence of a non-empty separator. To get individual characters, use `list(text)`.	Use `list("hello")`.	Get the list of characters of "cat" and join them back together with "-".
+258	"import math
+print(math.sqrt(-4))  # ValueError: math domain error"	"import math
+x = -4
+if x >= 0:
+    print(math.sqrt(x))
+else:
+    print(""no real square root"")"	Expects the square root of a negative number to return something such as nan or an imaginary value. The `math` module works with real numbers only and raises an error outside a function's domain.	Is there any real number that gives -4 when multiplied by itself?	`math` functions are for real numbers and raise ValueError for inputs outside their domain. Check the input first, or use `cmath` when you want complex results.	Test `x >= 0` before calling `math.sqrt`, or use `cmath.sqrt`.	Write a function safe_sqrt(x) that returns None for negative x and the square root otherwise.
+259	"import math
+print(math.floor(-2.5))  # -3, expected -2"	"import math
+print(math.trunc(-2.5))  # -2"	Thinks `floor` just drops the decimals. Floor rounds toward negative infinity, so for negative numbers it moves away from zero; `trunc` (or `int()`) discards the fraction.	Which is smaller, -3 or -2, and which way does floor go?	floor always goes down the number line while trunc goes toward zero. They agree for positive numbers and differ for negative ones.	Use `math.trunc(-2.5)` or `int(-2.5)`.	Predict floor and ceil of -1.2 and of 1.2, then run them to check.
+260	"import random
+colors = {""red"", ""green"", ""blue""}
+print(random.choice(colors))  # TypeError"	"import random
+colors = {""red"", ""green"", ""blue""}
+print(random.choice(list(colors)))"	Assumes `choice` picks from any collection. It selects by position, so it needs an ordered sequence such as a list or tuple, and sets have no positions.	How does choice pick an item, and does a set have positions?	`random.choice(seq)` uses an index internally. Convert the set to a list or tuple first.	Use `random.choice(list(colors))`.	Pick a random key from the dictionary {"a": 1, "b": 2}.
+261	"nums = [1, 2, 3]
+try:
+    part = nums[5:10]
+except IndexError:
+    print(""too short"")  # never runs; part is []"	"nums = [1, 2, 3]
+if len(nums) <= 5:
+    print(""too short"")
+else:
+    part = nums[5:10]"	Expects an out-of-range slice to raise an error, as an out-of-range index does. Slices quietly clamp to the sequence and return a shorter or empty result.	What does nums[5:10] evaluate to, and did any error occur?	Indexing one position past the end raises IndexError; slicing never does. Check with `len()` when the length matters.	Test `len(nums)` instead of waiting for an exception.	Predict "hello"[3:100] and "hello"[10:20], then verify.
+262	"s = ""python""
+print(s[0:3:-1])  # empty string, expected ""typ"""	"s = ""python""
+print(s[:3][::-1])  # typ"	Thinks a negative step just reverses whatever range is given. With a negative step the slice walks backwards, so start must be larger than stop; otherwise nothing is selected.	Walking backwards from index 0, can you ever reach index 3?	A negative step moves leftward, so slice from a larger index down to a smaller one. To reverse part of a string, slice it first and then reverse the piece with `[::-1]`.	Use `s[:3][::-1]`.	Get the last three characters of "python" in reverse order ("noh").
+263	"nums = [3, -1, 5]
+print(max(nums, 0))  # TypeError"	"nums = [3, -1, 5]
+print(max(max(nums), 0))  # 5"	Believes `max` can take a list and an extra value together. It accepts either one iterable or several separate values, not a mix, so here the list itself is compared with 0.	What two things is max comparing in this call?	`max(iterable)` or `max(a, b, c)`. With `max(nums, 0)` Python compares the list itself against 0. Reduce the list to a number first, or unpack it.	Use `max(max(nums), 0)` or `max(*nums, 0)`.	Write an expression for the larger of 10 and the smallest item of nums.
+264	"words = [""pear"", ""banana"", ""fig""]
+print(max(words, key=len))  # banana, expected 6"	"words = [""pear"", ""banana"", ""fig""]
+print(max(len(w) for w in words))  # 6"	Reads `key` as what the result should be. `key` only tells `max` how to compare the items; the winning item is returned unchanged, not the number computed from it.	Is the function in key used to choose the winner, or to transform the winner?	`max(items, key=f)` returns the item whose f(item) is largest. If you want the largest value of f itself, compute it with a comprehension or call f on the winner.	Use `max(len(w) for w in words)`.	Find the shortest word in words and also print its length.
+265	"s = set(""hello world"")
+print(len(s))  # 8 letters, expected 2 words"	"s = set(""hello world"".split())
+print(len(s))  # 2"	Thinks `set(text)` splits text into words. Like `list()`, `set()` walks over a string character by character and keeps the unique ones.	What does iterating over a string produce?	`set(iterable)` uses each item produced by iterating. A string produces characters, so split it into words first.	Use `set(text.split())`.	Count the distinct words in "to be or not to be".
+266	"with open(""a.txt"") as f:
+    print(f.read())
+    print(f.read())  # second call prints an empty string"	"with open(""a.txt"") as f:
+    text = f.read()
+print(text)
+print(text)"	Treats a file object like a stored string that can be re-read. A file has a read position that moves as you read; after `read()` it is at the end, so the next read returns nothing.	Where is the file's read position after the first f.read()?	Reading moves a cursor through the file. Save the result in a variable, or move back to the start with `f.seek(0)`.	Store `text = f.read()` once and reuse `text`.	Read a file once, then show both its number of lines and its number of characters without opening it a second time.
+267	"class Dog:
+    def __init__(self, name):
+        self.name = name
+        return self
+
+d = Dog(""Rex"")  # TypeError: __init__() should return None"	"class Dog:
+    def __init__(self, name):
+        self.name = name
+
+d = Dog(""Rex"")"	Believes `__init__` creates and returns the object. Python creates the object first and passes it in as `self`; `__init__` only sets it up and must return None.	Who creates the new Dog object: your __init__, or Python before it calls __init__?	Calling `Dog("Rex")` builds the instance, runs `__init__` on it and hands the instance back to you. `__init__` should simply assign attributes.	Delete `return self`.	Write a class Point whose constructor stores x and y, create Point(2, 3), and print its x.
+268	"class Dog:
+    def __init__(self, name):
+        self.name = name
+
+d = Dog(""Rex"")
+print(d)  # <__main__.Dog object at 0x...>"	"class Dog:
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return f""Dog({self.name})""
+
+d = Dog(""Rex"")
+print(d)  # Dog(Rex)"	Expects `print` to show an object's contents automatically. Python does not know which attributes matter, so by default it shows the class and memory address; define `__str__` to choose the text.	Does Python know what you want to see about a Dog?	`print()` calls `__str__` on the object. The default version shows the class name and address. Define `__str__` to return the text you want.	Add `def __str__(self): return f"Dog({self.name})"`.	Add a `__str__` method to a class Point (with x and y) so that print shows (2, 3).
+269	"class Dog:
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return f""Dog({self.name})""
+
+print([Dog(""Rex"")])  # [<__main__.Dog object at 0x...>]"	"class Dog:
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return f""Dog({self.name})""
+
+print([Dog(""Rex"")])  # [Dog(Rex)]"	Assumes `print` uses `__str__` for objects inside containers. Lists, dicts and tuples show their items with `__repr__`, so a class that defines only `__str__` still looks like a memory address inside a list.	When a list is printed, which special method does it call on each item?	`print(obj)` uses `__str__`, but containers display their items with `__repr__`. If only `__str__` exists, the default repr is used. Define `__repr__`; `str()` falls back to it when `__str__` is missing.	Define `__repr__` returning the text you want (it also serves as `__str__`).	Make `print([Point(1, 2)])` show [Point(1, 2)].
+270	"class P:
+    def __init__(self, x):
+        self.x = x
+
+    def __eq__(self, other):
+        return self.x == other.x
+
+seen = {P(1)}  # TypeError: unhashable type: 'P'"	"class P:
+    def __init__(self, x):
+        self.x = x
+
+    def __eq__(self, other):
+        return self.x == other.x
+
+    def __hash__(self):
+        return hash(self.x)
+
+seen = {P(1)}"	Thinks defining `==` is independent of hashing. When a class defines `__eq__` without `__hash__`, Python makes its instances unhashable, because equal objects must have equal hashes.	What must a set do with an object before storing it, and what rule must equal objects follow?	Sets and dict keys rely on hash values, and equal objects need equal hashes. Defining `__eq__` removes the default hash, so add a `__hash__` built from the same fields.	Add `def __hash__(self): return hash(self.x)`.	Make two P(1) objects count as a single item when both are put in a set.
+271	"class Calc:
+    def double(self, x):
+        return x * 2
+
+    def run(self, x):
+        return self.double(self, x)  # TypeError: takes 2 positional arguments but 3 were given
+
+print(Calc().run(4))"	"class Calc:
+    def double(self, x):
+        return x * 2
+
+    def run(self, x):
+        return self.double(x)
+
+print(Calc().run(4))  # 8"	Passes `self` explicitly when calling a method through an instance. The dot call `self.double(...)` already supplies the object as the first argument, so adding it again gives one argument too many.	How many parameters does double declare, and how many arguments did the call send?	`obj.method(a)` is turned into `Class.method(obj, a)` automatically. Only the call-through-the-class style passes the instance by hand.	Remove the extra `self` from the call.	Explain why `Calc.double(Calc(), 4)` and `Calc().double(4)` give the same answer.
+272	"x = (1, 2)
+if isinstance(x, list or tuple):  # False, expected True
+    print(""sequence"")"	"x = (1, 2)
+if isinstance(x, (list, tuple)):
+    print(""sequence"")"	Reads `list or tuple` like the English word "either". It is an expression that evaluates to just `list` (the first truthy value), so tuple is never tested; `isinstance` takes a tuple of types.	What value does `list or tuple` produce?	`or` returns its first truthy operand, and a class counts as truthy. To test several types, pass them to isinstance as a tuple.	Use `isinstance(x, (list, tuple))`.	Check, correctly, whether a value v is an int or a float.
+273	"class Account:
+    def __init__(self):
+        self.__balance = 100
+
+acc = Account()
+print(acc.__balance)  # AttributeError"	"class Account:
+    def __init__(self):
+        self.__balance = 100
+
+    def get_balance(self):
+        return self.__balance
+
+acc = Account()
+print(acc.get_balance())  # 100"	Believes a double leading underscore is just another naming style, or a hard privacy lock. Python renames `__balance` to `_Account__balance` ("name mangling"), so the plain name is missing but access is not truly blocked.	What does `print(acc.__dict__)` reveal about the attribute's real name?	`__x` inside a class is renamed to `_ClassName__x` to avoid clashes in subclasses; it is not a security feature. For ordinary attributes use one underscore (a convention) and offer a method or property for reading.	Add a method that returns `self.__balance` and call that method from outside.	Add a get_balance method to Account and print the balance through it.
+274	"class Circle:
+    def __init__(self, r):
+        self.r = r
+
+    @property
+    def area(self):
+        return 3.14 * self.r ** 2
+
+c = Circle(2)
+c.area = 50  # AttributeError"	"class Circle:
+    def __init__(self, r):
+        self.r = r
+
+    @property
+    def area(self):
+        return 3.14 * self.r ** 2
+
+c = Circle(2)
+c.r = 4
+print(c.area)  # 50.24"	Thinks a property is a stored value that can simply be overwritten. A property with no setter is read-only, because it is computed from other attributes each time it is read.	Where is the area stored, or is it calculated every time?	A property that has only a getter is computed on demand and refuses assignment. Change the data it depends on (the radius) instead, or define a setter.	Set `c.r = 4` and read `c.area` again.	Predict c.area after setting c.r = 3 (use 3.14 for pi), then run it.
+275	"def repeat(n):
+    def deco(func):
+        def wrapper(*args):
+            for _ in range(n):
+                func(*args)
+        return wrapper
+    return deco
+
+@repeat  # forgot the argument
+def hi():
+    print(""hi"")
+
+hi()  # TypeError"	"def repeat(n):
+    def deco(func):
+        def wrapper(*args):
+            for _ in range(n):
+                func(*args)
+        return wrapper
+    return deco
+
+@repeat(3)
+def hi():
+    print(""hi"")
+
+hi()"	Treats `@name` and `@name(arg)` as interchangeable. `@repeat` passes the function itself to `repeat`; a decorator that takes settings must be called first, as in `@repeat(3)`, to return the real decorator.	What does `@repeat` pass to repeat, and what does repeat return?	`@d` means `f = d(f)`, while `@d(3)` means `f = d(3)(f)`. A decorator factory needs the second form.	Write `@repeat(3)`.	Write the equivalent of `@repeat(2)` on hi without using the @ symbol.
+276	"def log(func):
+    def wrapper(*args):
+        return func(*args)
+    return wrapper
+
+@log
+def add(a, b):
+    """"""Add two numbers.""""""
+    return a + b
+
+print(add.__name__)  # wrapper, expected add"	"import functools
+
+def log(func):
+    @functools.wraps(func)
+    def wrapper(*args):
+        return func(*args)
+    return wrapper
+
+@log
+def add(a, b):
+    """"""Add two numbers.""""""
+    return a + b
+
+print(add.__name__)  # add"	Assumes a decorated function is still the same function, with its own name and docstring. The decorator replaces it with the wrapper, whose name and docstring show up unless `functools.wraps` copies the originals over.	After decoration, which object does the name add refer to?	Decoration rebinds `add` to `wrapper`. Putting `@functools.wraps(func)` on the wrapper copies the original's name, docstring and other metadata onto it.	Add `import functools` and put `@functools.wraps(func)` above `def wrapper`.	Fix the decorator, then check that both `add.__name__` and `add.__doc__` show the original function's details.
+277	"from os import *
+
+with open(""a.txt"") as f:  # TypeError: open() missing required argument 'flags'
+    print(f.read())"	"import os
+
+with open(""a.txt"") as f:
+    print(f.read())"	Thinks `import *` safely adds only the names you need. It dumps every public name into your namespace and silently replaces existing ones, such as the built-in `open`.	Which `open` does Python find after the star import?	`from module import *` overwrites same-named globals and hides where names come from. Import the module (`import os`) and write `os.listdir`, or import only the names you need.	Replace it with `import os`, or `from os import listdir`.	Rewrite the import so that you can use os.listdir and the built-in open in the same file.
+278	"from datetime import datetime
+start = datetime(2026, 1, 1)
+end = datetime(2026, 1, 3)
+print((end - start).seconds)  # 0, expected 172800"	"from datetime import datetime
+start = datetime(2026, 1, 1)
+end = datetime(2026, 1, 3)
+print((end - start).total_seconds())  # 172800.0"	Treats `seconds` as the whole length of a time span. A timedelta stores days, seconds and microseconds separately, and `.seconds` is only the leftover part under one day; `total_seconds()` gives the full duration.	Print end - start. Which parts does it show?	`timedelta` keeps `days`, `seconds` (0 to 86399) and `microseconds`. Use `total_seconds()` for the entire span.	Use `(end - start).total_seconds()`.	Compute how many hours separate two datetimes that are 2 days and 3 hours apart, using total_seconds.
+279	"from datetime import datetime
+t = datetime(2026, 3, 5, 14, 30)
+print(t.strftime(""%d/%M/%Y""))  # 05/30/2026, expected 05/03/2026"	"from datetime import datetime
+t = datetime(2026, 3, 5, 14, 30)
+print(t.strftime(""%d/%m/%Y""))  # 05/03/2026"	Assumes format codes are case-insensitive. The case selects a different field: `%m` is the month, `%M` is the minute.	Which value appears in the middle: 3 or 30?	`strftime` codes are case-sensitive. `%m` month, `%M` minute, `%Y` four-digit year, `%y` two-digit year, `%H` hour.	Change `%M` to `%m`.	Format t as 2026-03-05 14:30 using strftime.
+280	"from decimal import Decimal
+print(Decimal(0.1))  # 0.1000000000000000055511151231257827021181583404541015625"	"from decimal import Decimal
+print(Decimal(""0.1""))  # 0.1"	Expects `Decimal` to clean up a float. The float 0.1 is already inexact before Decimal sees it, so Decimal faithfully copies the error; build it from a string to get an exact decimal value.	What does Decimal receive: the text you typed, or a float?	Python turns 0.1 into a binary float before Decimal is called. Passing the string "0.1" preserves exactly what you wrote.	Use `Decimal("0.1")`.	Show that `Decimal("0.1") + Decimal("0.2") == Decimal("0.3")` is True, and compare with plain floats.
+281	x = 1 / 0.0  # ZeroDivisionError, expected inf	"d = 0.0
+x = 1 / d if d != 0 else float(""inf"")
+print(x)  # inf"	Assumes floats follow other languages and give infinity when dividing by zero. Python raises ZeroDivisionError for ints and floats alike; `inf` appears only when you create it yourself or when a calculation overflows.	Does Python treat 0.0 any differently from 0 here?	Division by zero raises ZeroDivisionError for every numeric type. Check the divisor first or catch the error.	Test the divisor first, or wrap the division in try/except ZeroDivisionError.	Write a function ratio(a, b) that returns float("inf") when b is 0 and a / b otherwise.
+282	"x = float(""nan"")
+if x == float(""nan""):
+    print(""missing"")  # never prints"	"import math
+x = float(""nan"")
+if math.isnan(x):
+    print(""missing"")"	Believes every value equals itself. NaN ("not a number") compares unequal to everything, including itself, so `==` can never detect it; `math.isnan` can.	Is one "not a number" equal to another "not a number"?	By the floating-point rules, every comparison with NaN is False (except `!=`). Use `math.isnan(x)` to test for it.	Use `math.isnan(x)`.	Predict `float("nan") == float("nan")` and `float("nan") != float("nan")`, then run both.
+283	"a = [1, 2]
+b = a
+b += [3]
+print(a)  # [1, 2, 3], expected [1, 2]"	"a = [1, 2]
+b = a + [3]
+print(a)  # [1, 2]"	Thinks `b += [3]` is always shorthand for `b = b + [3]`. For lists, `+=` extends the existing list in place, so every name sharing that list sees the change; `b + [3]` builds a new list.	Does `+=` on a list create a new list, or change the current one?	`list +=` works in place, like `extend`. `b = b + [3]` makes a new list and rebinds b. With aliases, only the second form leaves a untouched.	Use `b = a + [3]`, or copy first with `b = a.copy()`.	Predict x and y after `x = (1, 2)`, `y = x`, `y += (3,)`, and explain why tuples behave differently.
+284	"answer = """"  # user just pressed Enter
+if answer in ""yes"":
+    print(""accepted"")  # prints for """", ""y"", ""e"", ""es"""	"answer = """"
+if answer.lower() in (""yes"", ""y""):
+    print(""accepted"")"	Uses `in` with a string as if it were a list of allowed answers. On text, `in` tests for a substring, so "", "y", "es" and "ye" are all "in" "yes".	Is "" contained in "yes"? What about "es"?	`x in "yes"` asks whether x is a piece of that string. For a set of valid answers, put them in a tuple, list or set.	Use `answer in ("yes", "y")`.	Accept "y" or "yes" in any capitalization and reject everything else, including an empty answer.
+285	"d = {""a"": 1}
+print(d.get(""b"", default=0))  # TypeError: dict.get() takes no keyword arguments"	"d = {""a"": 1}
+print(d.get(""b"", 0))  # 0"	Assumes every optional argument can be passed by name. Some built-in methods, including `dict.get`, accept positional arguments only, so the default must be given by position.	What does the error message say get() takes?	Many built-in functions have positional-only parameters. Check the signature with `help(dict.get)`: parameters before the `/` cannot be named.	Write `d.get("b", 0)`.	Use help(dict.get) to read its signature, then write a call that returns 5 for the missing key "z".
+286	d = dict("a"=1)  # SyntaxError	"d = dict(a=1)
+print(d)  # {'a': 1}"	Treats keyword arguments as the same thing as dictionary-literal syntax. In `dict(a=1)` the name is a bare identifier used as a keyword argument, and it is stored as the string "a"; a quoted string cannot be an argument name.	In a function call, can the name before the = be written in quotes?	`dict(name=value)` uses keyword-argument syntax, so names are unquoted identifiers (no spaces or dashes). Use the literal `{"a": 1}` when keys need quotes.	Write `dict(a=1)` or `{"a": 1}`.	Create {"first name": "Ada"} and explain why `dict(first name="Ada")` cannot work.
+287	"def fib(n):
+    if n < 2:
+        return n
+    return fib(n - 1) + fib(n - 2)
+
+print(fib(40))  # correct, but takes a very long time"	"from functools import lru_cache
+
+@lru_cache(maxsize=None)
+def fib(n):
+    if n < 2:
+        return n
+    return fib(n - 1) + fib(n - 2)
+
+print(fib(40))  # 102334155, instantly"	Assumes a correct recursive definition is automatically efficient. This version recomputes the same values again and again (hundreds of millions of calls for fib(40)); caching the results turns it into a quick calculation.	Draw the calls for fib(5). Which values are computed more than once?	Each call branches into two more calls, and the branches overlap, so the work grows exponentially. Memoization remembers results already computed, and `functools.lru_cache` adds it with one line.	Add `from functools import lru_cache` and put `@lru_cache(maxsize=None)` above the def.	Count how many times fib is called for fib(20) with a global counter, then compare with and without caching.
+288	"while True:
+    try:
+        n = int(input(""Number: ""))
+    except ValueError:
+        print(""Not a number"")
+    print(""You typed"", n)  # also runs after bad input
+    break"	"while True:
+    try:
+        n = int(input(""Number: ""))
+        break
+    except ValueError:
+        print(""Not a number"")
+print(""You typed"", n)"	Thinks the code after a try/except runs only when the try worked. After an except block finishes, execution simply continues with the next line, so the code below also runs after bad input, with `n` missing or stale.	Where does execution go after the except block finishes?	Put the code that depends on success inside the `try` right after the risky line, or in an `else:` clause. A `break` placed right after the conversion leaves the loop only when the conversion worked.	Move `break` into the try block, right after the `int(...)` line, and print after the loop.	Write a loop that keeps asking for an age until a whole number is typed, then returns that number.
+289	"with open(""a.txt"") as f:
+    f.write(""hi"")  # io.UnsupportedOperation: not writable"	"with open(""a.txt"", ""w"") as f:
+    f.write(""hi"")"	Assumes an opened file allows every operation. The mode decides what is allowed, and the default mode "r" is read-only, so `write` fails.	Which mode does open use if you give none?	`open(name)` means mode "r", read-only. Use "w" to write (replacing the old content) or "a" to append.	Open the file with `"w"` (or `"a"` to keep the existing text).	Which mode would you use to add a line to the end of a log file without erasing it?
+290	print(int("ff"))  # ValueError	print(int("ff", 16))  # 255	Assumes `int()` recognises every number notation by itself. With no base argument it parses decimal digits only, so hexadecimal text needs base 16 (and binary text base 2).	Which digits does int expect when you give no base?	`int(text, base)` parses text written in that base, for example 2, 8 or 16.	Add the base: `int("ff", 16)`.	Convert the binary text "1010" to a decimal number.
+291	print(len(bin(5)))  # 5, expected 3 bits	print(len(bin(5)[2:]))  # 3	Thinks `bin()` returns just the binary digits as a number. It returns text with a "0b" prefix, so the result is 5 characters long: `'0b101'`.	Print bin(5). Which characters does it contain?	`bin`, `oct` and `hex` return strings that start with 0b, 0o or 0x. Slice off the prefix with `[2:]`, or use `format(n, "b")`.	Use `bin(5)[2:]` or `format(5, "b")`.	Write 10 in binary with no prefix, padded with zeros to 8 digits.
+292	"age = input(""Age: "")  # user types 20
+if age > 18:  # TypeError
+    print(""adult"")"	"age = int(input(""Age: ""))
+if age > 18:
+    print(""adult"")"	Believes Python quietly converts text to numbers when comparing. `==` between a str and an int simply returns False, but `>` and `<` raise TypeError because the two types have no order relative to each other.	What type is age, and what type is 18?	`input()` always returns a str, and ordering comparisons need comparable types. Convert with `int()` before comparing.	Use `age = int(input("Age: "))`.	Ask for a score and print "pass" when it is at least 50, converting the input first.
+293	"nums = [1, 5, 2]
+if any(nums > 3):  # TypeError
+    print(""found one"")"	"nums = [1, 5, 2]
+if any(n > 3 for n in nums):
+    print(""found one"")"	Expects a comparison to apply to every item, as in "is any number greater than 3?". `nums > 3` compares the list itself with 3, which is an error; `any` needs a series of True/False values, one per item.	What is being compared with 3: each item, or the whole list?	`any(iterable)` wants booleans. Produce them with a generator expression such as `n > 3 for n in nums`.	Use `any(n > 3 for n in nums)`.	Check that every word in ["hi", "yo", "hey"] has at most three letters, using all().
+294	"def main():
+    print(""Hello"")
+
+# running the file prints nothing"	"def main():
+    print(""Hello"")
+
+if __name__ == ""__main__"":
+    main()"	Expects a function called `main` to run by itself, as in C or Java. In Python `def` only creates the function, and the name `main` has no special meaning; something has to call it.	Which line of the file actually calls main?	Python runs a file from top to bottom, and `def` just stores the function. Call it explicitly, usually under `if __name__ == "__main__":` so it does not run on import.	Add `main()` at the bottom, guarded by the `__name__` check.	Write a script with a function greet() that runs when the file is run directly but not when it is imported.
+295	"x = 5
+if x > 3:
+    return ""big""  # SyntaxError: 'return' outside function"	"def size(x):
+    if x > 3:
+        return ""big""
+    return ""small""
+
+print(size(5))"	Thinks `return` means "stop here and give this answer" anywhere in a program. It belongs only inside a function; at top level there is no caller to hand a value back to.	Return to whom, if no function was called?	`return` hands a value back to the caller of a function. Top-level code has no caller. Wrap the logic in a def, or just use print and if/else.	Put the code inside a function, or replace `return` with `print`.	Turn the snippet into a function size(x) that returns "big" or "small", and print size(5).
+296	"x = 5
+if x > 3:
+    print(""big"")
+    break  # SyntaxError: 'break' outside loop"	"for x in [1, 5, 8]:
+    if x > 3:
+        print(""big"")
+        break"	Believes `break` can leave any block, such as an `if`. It exits only the nearest enclosing loop, and it is a SyntaxError where there is no loop.	Which loop is this break supposed to end?	`break` and `continue` belong to `for` and `while` loops. To skip the rest of an if, restructure with else/elif; to stop a whole program use `sys.exit()`.	Put the `if` inside a loop, or remove the `break`.	Search [3, 8, 12] for the first number above 5, print it, and stop the loop afterwards.
+297	"filename = ""archive.tar.gz""
+ext = filename.split(""."")[1]
+print(ext)  # tar, expected gz"	"filename = ""archive.tar.gz""
+ext = filename.split(""."")[-1]
+print(ext)  # gz"	Assumes a file name contains exactly one dot. A name can have several, so a fixed position such as index 1 picks the wrong piece; the last piece is at index -1.	How many pieces does split(".") produce for this name?	`split` cuts at every separator. Do not rely on a fixed position when the number of pieces varies; use -1 for "last", or `os.path.splitext`.	Use `filename.split(".")[-1]`.	Get the last extension and the name without it for "photo.final.v2.png", using os.path.splitext.
+298	"matrix = [[1, 2], [3, 4]]
+print(list(zip(matrix)))  # [([1, 2],), ([3, 4],)], expected [(1, 3), (2, 4)]"	"matrix = [[1, 2], [3, 4]]
+print(list(zip(*matrix)))  # [(1, 3), (2, 4)]"	Passes a list of rows to `zip` as a single argument. `zip` pairs up its separate arguments, so one list gives one-item tuples; the `*` unpacks the rows into separate arguments, which swaps rows and columns.	How many arguments does zip receive here, and what is it pairing up?	`zip(a, b)` pairs a[i] with b[i]. A list of rows is a single argument, so unpack it with `*` to pass each row separately. The result is the transpose of the grid.	Use `zip(*matrix)`.	Print the columns of [[1, 2, 3], [4, 5, 6]] as tuples, using zip and the * operator.
+299	"nums = [4, 7, 4, 9, 4]
+print(nums.index(4))  # 0, expected positions 0, 2 and 4"	"nums = [4, 7, 4, 9, 4]
+print([i for i, n in enumerate(nums) if n == 4])  # [0, 2, 4]"	Thinks `index` reports every match. It returns only the position of the first match and then stops searching.	How many positions does index return, and which one is it?	`list.index(x)` gives a single position, the first match. To find all matches, scan the list with `enumerate`.	Use `[i for i, n in enumerate(nums) if n == 4]`.	Find every position of the letter "a" in "banana".
+300	"d = {""a"": 3, ""b"": 1}
+print(sorted(d.items(), key=d.get))  # TypeError"	"d = {""a"": 3, ""b"": 1}
+print(sorted(d.items(), key=lambda kv: kv[1]))  # [('b', 1), ('a', 3)]"	Thinks `key=d.get` works no matter what is being sorted. `d.get` looks up a key, which suits `sorted(d, key=d.get)`; but the items are (key, value) tuples, which are not keys in the dict, so every lookup gives None and None cannot be compared.	What does d.get return when you give it a tuple like ("a", 3)?	The key function receives each element being sorted. Elements of `d.items()` are pairs, so to sort by value pick the second part of the pair with a lambda; `d.get` only fits when you sort the keys themselves.	Use `key=lambda kv: kv[1]`, or sort the keys with `sorted(d, key=d.get)`.	Sort the dictionary {"x": 2, "y": 9, "z": 5} by value, largest first, as a list of (key, value) pairs.

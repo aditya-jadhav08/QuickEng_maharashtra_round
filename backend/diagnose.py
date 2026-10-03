@@ -14,7 +14,10 @@ MISCONCEPTION_LIST_STR = ""
 
 try:
     with open("data/misconceptions.csv", "r", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
+        header = f.readline()
+        f.seek(0)
+        delimiter = '\t' if '\t' in header else ','
+        reader = csv.DictReader(f, delimiter=delimiter)
         for row in reader:
             # We prefix the ID with "M" to keep the AI consistent (e.g. M1, M2... M300)
             m_id = f"M{row['ID'].strip()}"
