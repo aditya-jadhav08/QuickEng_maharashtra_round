@@ -1,0 +1,31 @@
+id,description
+M01,Confusing assignment (=) with equality comparison (==)
+M02,Misunderstanding zero-indexed array boundaries
+M03,Assuming implicit type coercion during concatenation
+M04,Misunderstanding Python's use of significant whitespace (indentation)
+M05,Misunderstanding that range limits create a half-open interval
+M06,Confusing standard output display (print) with returning a discrete data value
+M07,Assuming strings are mutable arrays of characters
+M08,Misunderstanding that default arguments are evaluated only once at definition time
+M09,Applying conversational English shorthand to boolean logic
+M10,Misunderstanding tuple syntax: confusing mathematical grouping with the trailing comma requirement
+M11,Forgetting that object-oriented instance methods implicitly pass self
+M12,Iterating over a list while modifying it causing index skipping
+M13,Misunderstanding variable shadowing and local vs global scope separation
+M14,Confusing object identity (is) with value equality (==)
+M15,Assuming dictionary lookup returns a default value for missing keys instead of KeyError
+M16,Forgetting that while loops require manual state management
+M17,Confusing collection size (len) with an iterable sequence of indices (range)
+M18,Assuming iterating over a dictionary unpacks both keys and values by default
+M19,Misinterpreting the Python for-else construct
+M20,Nested loop break scope misunderstanding
+M21,Attempting to use a mutable list as a dictionary key
+M22,Assuming the {} literal creates an empty set
+M23,Treating a dictionary like a positional array via numerical index
+M24,Local scope flagging causing UnboundLocalError
+M25,Late-binding closures in loops
+M26,Shadowing built-in names (list dict str)
+M27,Confusing filtering placement with ternary syntax in list comprehensions
+M28,Misunderstanding order in nested list comprehensions
+M29,Misusing list comprehensions for side effects
+M30,Shallow copying in list multiplication creating linked references
