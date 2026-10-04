@@ -14,11 +14,13 @@ export const ResolutionPanel: React.FC<ResolutionPanelProps> = ({ task, original
   const [revisionCode, setRevisionCode] = useState(originalCode);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ResolveResult | null>(null);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   // Reset revision code when a new diagnosis arrives
   useEffect(() => {
     setRevisionCode(originalCode);
     setResult(null);
+    setFetchError(null);
   }, [originalCode]);
 
   if (!FEATURES.resolution) return null;
@@ -27,12 +29,14 @@ export const ResolutionPanel: React.FC<ResolutionPanelProps> = ({ task, original
     if (!revisionCode.trim()) return;
     setLoading(true);
     setResult(null);
+    setFetchError(null);
     try {
       const data = await resolveMisconception(task, revisionCode);
       console.log("Resolution result from backend:", data);
       setResult(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      setFetchError(err.message || 'Network error');
     } finally {
       setLoading(false);
     }
@@ -97,6 +101,14 @@ export const ResolutionPanel: React.FC<ResolutionPanelProps> = ({ task, original
           <div className="flex flex-col">
             <span className="text-xs font-bold text-tertiary uppercase tracking-wide">Not resolved yet</span>
             <p className="text-xs font-medium text-on-surface">{result.feedback || result.Feedback || 'Keep trying! Re-read the hint above.'}</p>
+          </div>
+        </div>
+      ) : fetchError ? (
+        <div className="p-3.5 rounded-xl bg-error/20 border border-error/40 flex items-center gap-3 text-on-surface shadow-sm">
+          <span className="material-symbols-outlined text-error text-xl">error</span>
+          <div className="flex flex-col">
+            <span className="text-xs font-bold text-error uppercase tracking-wide">Connection Error</span>
+            <p className="text-xs font-medium text-on-surface">{fetchError}</p>
           </div>
         </div>
       ) : null}
