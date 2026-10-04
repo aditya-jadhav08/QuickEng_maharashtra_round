@@ -149,10 +149,12 @@ We want to be honest about what this version does and does not do:
 
 ## 👥 Team
 
-- [Aditya Jadhav] – [backend devloper]
-- [Atharva Chavan] – [Data architect]
-- [Harsh Bhopi] – [Data & Sheets Integrator]
-- [Shruti Sabat] - [UI/UX designer]
+| Name | Role | Contribution |
+|---|---|---|
+| **Aditya Jadhav** | Backend Developer | Built the FastAPI backend, the Gemini integration and the deployment on Render |
+| **Atharva Chavan** | Data Architect | Designed the structure of the misconception dataset and how it grounds the AI |
+| **Harsh Bhopi** | Data & Sheets Integrator | Built and curated the 300-entry dataset and prepared it for use by the AI engine |
+| **Shruti Sabat** | UI/UX Designer | Designed the "Nocturne Luminary" interface and the user experience |
 
 *Built for [Hackathon Name], [Year].*
 
