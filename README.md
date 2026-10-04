@@ -120,8 +120,8 @@ After the student edits their code, it is evaluated again to check that the orig
 
 The app is deployed publicly:
 
-- **Frontend:** hosted on **Vercel** → YOUR_VERCEL_LINK
-- **Backend (FastAPI):** hosted on **Render** → YOUR_RENDER_LINK
+- **Frontend:** hosted on **Vercel** →https://quick-eng-maharashtra-round.vercel.app/ 
+- **Backend (FastAPI):** hosted on **Render** → https://quickeng-maharashtra-round.onrender.com/
 
 **Note:** On Render's free plan the backend may go to sleep when idle, so the first request can take 30 to 60 seconds. Please wait a moment and try again.
 
