@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FEATURES } from '../config';
-import { resolveMisconception } from '../api';
+import { resolveMisconception, VITE_API_URL } from '../api';
 import { ResolveResult } from '../types';
 import { CodeEditor } from './CodeEditor';
 
@@ -36,7 +36,7 @@ export const ResolutionPanel: React.FC<ResolutionPanelProps> = ({ task, original
       setResult(data);
     } catch (err: any) {
       console.error(err);
-      setFetchError(err.message || 'Network error');
+      setFetchError(`${err.message || 'Network error'} (Tried to reach: ${VITE_API_URL}/resolve)`);
     } finally {
       setLoading(false);
     }
