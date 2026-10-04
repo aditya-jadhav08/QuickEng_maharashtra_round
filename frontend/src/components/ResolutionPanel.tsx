@@ -77,25 +77,29 @@ export const ResolutionPanel: React.FC<ResolutionPanelProps> = ({ task, original
         </button>
       </div>
 
-      {(result?.resolved === true || result?.resolved === 'true' || result?.resolved === 'True') && (
+      {result && (
+        result.resolved === true || 
+        result.resolved === 'true' || 
+        result.resolved === 'True' || 
+        result.Resolved === true || 
+        result.Resolved === 'true'
+      ) ? (
         <div className="p-3.5 rounded-xl bg-primary/20 border border-primary/40 flex items-center gap-3 text-on-surface shadow-sm">
           <span className="text-xl">🎉</span>
           <div className="flex flex-col">
             <span className="text-xs font-bold text-primary uppercase tracking-wide">Misconception Resolved!</span>
-            <p className="text-xs font-medium text-on-surface">Great job! {result.feedback}</p>
+            <p className="text-xs font-medium text-on-surface">Great job! {result.feedback || result.Feedback}</p>
           </div>
         </div>
-      )}
-
-      {result && (result.resolved === false || result.resolved === 'false' || result.resolved === 'False') && (
+      ) : result ? (
         <div className="p-3.5 rounded-xl bg-tertiary/20 border border-tertiary/40 flex items-center gap-3 text-on-surface shadow-sm">
           <span className="material-symbols-outlined text-tertiary text-xl">cancel</span>
           <div className="flex flex-col">
             <span className="text-xs font-bold text-tertiary uppercase tracking-wide">Not resolved yet</span>
-            <p className="text-xs font-medium text-on-surface">{result.feedback}</p>
+            <p className="text-xs font-medium text-on-surface">{result.feedback || result.Feedback || 'Keep trying! Re-read the hint above.'}</p>
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };
