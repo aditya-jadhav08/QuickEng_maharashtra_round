@@ -149,9 +149,10 @@ We want to be honest about what this version does and does not do:
 
 ## 👥 Team
 
-- [Your Name] – [Role]
-- [Teammate 2] – [Role]
-- [Teammate 3] – [Role]
+- [Aditya Jadhav] – [backend devloper]
+- [Atharva Chavan] – [Data architect]
+- [Harsh Bhopi] – [Data & Sheets Integrator]
+- [Shruti Sabat] - [UI/UX designer]
 
 *Built for [Hackathon Name], [Year].*
 
