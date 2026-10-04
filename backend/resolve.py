@@ -6,7 +6,8 @@ from google.genai import types
 def resolve_code(task: str, code: str) -> dict:
     try:
         model_name = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
-        client = genai.Client()
+        api_key = os.getenv("GEMINI_API_KEY")
+        client = genai.Client(api_key=api_key)
 
         prompt = f"""You are an expert Python tutor. 
 The student was given the following task:
