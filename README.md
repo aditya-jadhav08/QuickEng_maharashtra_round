@@ -156,7 +156,7 @@ We want to be honest about what this version does and does not do:
 | **Harsh Bhopi** | Data & Sheets Integrator | Built and curated the 300-entry dataset and prepared it for use by the AI engine |
 | **Shruti Sabat** | UI/UX Designer | Designed the "Nocturne Luminary" interface and the user experience |
 
-*Built for [Hackathon Name], [Year].*
+*Built for Bit N Build , 2026*
 
 ## 📄 License
 
