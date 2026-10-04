@@ -29,6 +29,7 @@ export const ResolutionPanel: React.FC<ResolutionPanelProps> = ({ task, original
     setResult(null);
     try {
       const data = await resolveMisconception(task, revisionCode);
+      console.log("Resolution result from backend:", data);
       setResult(data);
     } catch (err) {
       console.error(err);
@@ -76,7 +77,7 @@ export const ResolutionPanel: React.FC<ResolutionPanelProps> = ({ task, original
         </button>
       </div>
 
-      {result?.resolved === true && (
+      {(result?.resolved === true || result?.resolved === 'true' || result?.resolved === 'True') && (
         <div className="p-3.5 rounded-xl bg-primary/20 border border-primary/40 flex items-center gap-3 text-on-surface shadow-sm">
           <span className="text-xl">🎉</span>
           <div className="flex flex-col">
@@ -86,7 +87,7 @@ export const ResolutionPanel: React.FC<ResolutionPanelProps> = ({ task, original
         </div>
       )}
 
-      {result && result.resolved === false && (
+      {result && (result.resolved === false || result.resolved === 'false' || result.resolved === 'False') && (
         <div className="p-3.5 rounded-xl bg-tertiary/20 border border-tertiary/40 flex items-center gap-3 text-on-surface shadow-sm">
           <span className="material-symbols-outlined text-tertiary text-xl">cancel</span>
           <div className="flex flex-col">
