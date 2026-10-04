@@ -17,6 +17,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def read_root():
+    return {
+        "status": "online", 
+        "message": "Welcome to the Re:Learn Tutor API!",
+        "endpoints": ["POST /diagnose", "POST /resolve"]
+    }
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
