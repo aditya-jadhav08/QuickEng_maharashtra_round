@@ -6,7 +6,7 @@ Projects and resources for the Bit N Build 2026 Internal Maharashtra Round.
 
 Standard compilers tell you *where* your code broke. **Re:Learn** tells you *why* your thinking went wrong, and uses Socratic hints to guide you to the fix yourself.
 
-[🌐 Live Demo (Vercel)](YOUR_VERCEL_LINK) · [⚙️ API (Render)](YOUR_RENDER_LINK) · [📊 Dataset](#-the-dataset)
+[🌐 Live Demo (Vercel)](https://quick-eng-maharashtra-round.vercel.app/) · [⚙️ API (Render)](https://quickeng-maharashtra-round.onrender.com/) · [📊 Dataset](#-the-dataset)
 
 ---
 
