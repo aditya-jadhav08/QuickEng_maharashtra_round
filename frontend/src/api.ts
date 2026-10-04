@@ -1,6 +1,6 @@
 import { DiagnosisResult, HintLevel, ResolveResult } from './types';
 
-const VITE_API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+const VITE_API_URL = (import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000').replace(/\/+$/, '');
 
 export async function diagnoseCode(task: string, code: string): Promise<DiagnosisResult> {
   const response = await fetch(`${VITE_API_URL}/diagnose`, {
